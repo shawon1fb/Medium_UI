@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3613F6D32CEB8EB20034B5B2 /* MediumCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3613F6D22CEB8EB20034B5B2 /* MediumCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3613F6AB2CEB8DA80034B5B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3613F6D32CEB8EB20034B5B2 /* MediumCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Medium_UI;
 			packageProductDependencies = (
+				3613F6D22CEB8EB20034B5B2 /* MediumCore */,
 			);
 			productName = Medium_UI;
 			productReference = 3613F6992CEB8DA60034B5B2 /* Medium_UI.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 3613F6902CEB8DA60034B5B2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3613F6D12CEB8EB20034B5B2 /* XCLocalSwiftPackageReference "../MediumCore" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3613F69A2CEB8DA60034B5B2 /* Products */;
 			projectDirPath = "";
@@ -401,6 +410,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Medium-UI-Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -428,6 +438,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Medium-UI-Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -549,6 +560,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		3613F6D12CEB8EB20034B5B2 /* XCLocalSwiftPackageReference "../MediumCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MediumCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3613F6D22CEB8EB20034B5B2 /* MediumCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MediumCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3613F6912CEB8DA60034B5B2 /* Project object */;
 }

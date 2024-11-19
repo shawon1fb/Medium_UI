@@ -1,0 +1,24 @@
+{
+  "originHash" : "6790b337b3920aee81ba45feb70c6dfd082b059957b1cb422f1abda26a2347de",
+  "pins" : [
+    {
+      "identity" : "easyxconnect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shawon1fb/EasyXConnect.git",
+      "state" : {
+        "revision" : "57c1c0653a0abb625fc08c3ae4c18bf91779c8b6",
+        "version" : "1.0.9"
+      }
+    },
+    {
+      "identity" : "swiftsoup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "state" : {
+        "revision" : "0837db354faf9c9deb710dc597046edaadf5360f",
+        "version" : "2.7.6"
+      }
+    }
+  ],
+  "version" : 3
+}
