@@ -41,7 +41,8 @@ struct ImageParagraphView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 12) {
-                if let url = imageURL {
+                if let url = imageURL
+                {
                     AsyncImage(url: url) { phase in
                         switch phase {
                         case .empty:
@@ -49,9 +50,9 @@ struct ImageParagraphView: View {
                                 .frame(maxWidth: layout.maxWidth(containerWidth: geometry.size.width))
                         case .success(let image):
                             image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: layout.maxWidth(containerWidth: geometry.size.width))
+//                                .resizable()
+                              //  .aspectRatio(contentMode: .fit)
+//                                .frame(maxWidth: layout.maxWidth(containerWidth: geometry.size.width))
                         case .failure:
                             Image(systemName: "photo")
                                 .foregroundColor(.secondary)
@@ -81,6 +82,7 @@ struct ImageParagraphView: View {
             }
             .padding(.vertical)
             .frame(maxWidth: .infinity)
+            .background(Color.teal)
         }
     }
     
@@ -91,6 +93,7 @@ struct ImageParagraphView: View {
         #else
         let scale = NSScreen.main?.backingScaleFactor ?? 2
         #endif
-        return URL(string: "https://miro.medium.com/v2/resize:fit:700/format:webp/\(id)?dpr=\(scale)")
+//        return URL(string: "https://miro.medium.com/v2/resize:fit:700/format:webp/\(id)?dpr=\(scale)")
+        return URL(string: "https://miro.medium.com/v2/resize:fit:700/\(id)")
     }
 }

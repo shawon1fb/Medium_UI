@@ -277,13 +277,23 @@ struct PostContentView: View {
   
     
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                ForEach(viewModel.paragraphs) { paragraph in
-                    ParagraphView(paragraph: paragraph)
+        VStack{
+            
+            Text(viewModel.title)
+                .font(.title)
+                .padding()
+            Text(viewModel.subtitle)
+                .font(.subheadline)
+                .padding()
+            
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    ForEach(viewModel.paragraphs) { paragraph in
+                        ParagraphView(paragraph: paragraph)
+                    }
                 }
+                .padding()
             }
-            .padding()
         }
         .onAppear{
             Task{
@@ -293,23 +303,3 @@ struct PostContentView: View {
     }
 }
 
-//
-//
-//init(postData: [String: Any]) {
-//       let content = Content(bodyModel: Content.BodyModel(paragraphs: []))  // Parse your actual content
-//       let title = ""  // Your actual title
-//       let subtitle = ""  // Your actual subtitle
-//       let previewImageId = ""  // Your actual preview image id
-//       let highlights: [Highlight] = []  // Your actual highlights
-//       let tags: [PostContentViewModel.Tag] = []  // Your actual tags
-//       
-//       _viewModel = StateObject(wrappedValue: PostContentViewModel(
-//           content: content,
-//           title: title,
-//           subtitle: subtitle,
-//           previewImageId: previewImageId,
-//           highlights: highlights,
-//           tags: tags
-//       ))
-//   }
-//   

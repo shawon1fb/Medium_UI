@@ -35,7 +35,10 @@ actor MediumRepository{
     }
     
     func getPost2()async throws -> Post{
-        let postId = try await MediumParserUtility().resolveMediumURL("https://medium.com/@kalidoss.shanmugam/ios-animation-excellence-best-practices-and-solutions-for-common-issues-61f937748c39")
+        let url = "https://medium.com/@itsuki.enjoy/swift-ios-real-time-human-traffic-tracker-01f1f6ade3f3"
+        let postId = try await MediumParserUtility().resolveMediumURL( url
+                                                                       //"https://medium.com/@kalidoss.shanmugam/ios-animation-excellence-best-practices-and-solutions-for-common-issues-61f937748c39"
+        )
         
         print("postId -> \(postId)")
         
