@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import EasyX
+import XSwiftUI
 
 struct ContentView: View {
     @State var count: Int = 0
@@ -28,6 +30,20 @@ struct ContentView: View {
                 
             }
         }
+    }
+}
+
+
+
+struct ContentView2: View {
+    
+    
+    var body: some View {
+        VStack{
+            PostContentView()
+        }
+        .background(Color(hex: "#1F2A37"))
+        
     }
 }
 

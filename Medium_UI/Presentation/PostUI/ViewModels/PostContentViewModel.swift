@@ -23,8 +23,10 @@ class PostContentViewModel: ObservableObject {
     @Published var subtitle: String = ""
     let repository: MediumRepository = MediumRepository()
     @Published var previewImageId: String = ""
-    @Published  var highlights: [Highlight] = []
+    @Published  var highlights: [HighlightModel] = []
     @Published var tags: [Tag] = []
+    
+    @Published var hasError: String? =  nil
     
     struct Tag: Codable {
         let displayTitle: String
@@ -45,6 +47,7 @@ class PostContentViewModel: ObservableObject {
     @MainActor
     func getPostContent()async {
         do{
+            hasError = nil
             let post = try await repository.getPost2()
             title = post.title
             subtitle = post.previewContent.subtitle
@@ -59,6 +62,7 @@ class PostContentViewModel: ObservableObject {
             
         }catch{
             print("error fetching post: \(error)")
+            hasError = error.localizedDescription
         }
     }
     

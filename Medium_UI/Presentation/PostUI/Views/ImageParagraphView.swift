@@ -52,7 +52,7 @@ struct ImageParagraphView: View {
                             image
 //                                .resizable()
                               //  .aspectRatio(contentMode: .fit)
-//                                .frame(maxWidth: layout.maxWidth(containerWidth: geometry.size.width))
+                                .frame(maxWidth: layout.maxWidth(containerWidth: geometry.size.width))
                         case .failure:
                             Image(systemName: "photo")
                                 .foregroundColor(.secondary)

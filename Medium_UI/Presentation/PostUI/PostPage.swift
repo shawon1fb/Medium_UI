@@ -8,6 +8,8 @@
 import SwiftUI
 import Foundation
 import AppKit
+import EasyX
+import XSwiftUI
 
 struct ParagraphView: View {
     let paragraph: PostContentViewModel.ParsedParagraph
@@ -20,8 +22,8 @@ struct ParagraphView: View {
             HeaderView(text: paragraph.attributedText, level: .h3)
         case .h4:
             HeaderView(text: paragraph.attributedText, level: .h4)
-        case .image:
-            ImageParagraphView(paragraph: paragraph.original)
+//        case .image:
+//            ImageParagraphView(paragraph: paragraph.original)
         case .paragraph:
             ParagraphTextView(attributedText: paragraph.attributedText)
         case .unorderedList:
@@ -38,6 +40,8 @@ struct ParagraphView: View {
             MixtapeEmbedView(paragraph: paragraph.original)
         case .iframe:
             IframeView(paragraph: paragraph.original)
+        default:
+            Text("")
         }
     }
 }
@@ -73,7 +77,7 @@ struct HeaderView: View {
                 .font(level.font)
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
-                .padding(level.padding)
+//                .padding(level.padding)
         }
     }
 }
@@ -117,32 +121,6 @@ struct ListItemView: View {
     }
 }
 
-struct CodeBlockView: View {
-    let paragraph: Paragraph
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            if let lang = paragraph.codeBlockMetadata?.lang {
-                Text(lang)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-            }
-            
-            ScrollView(.horizontal, showsIndicators: true) {
-                if let text = paragraph.text {
-                    Text(text)
-                        .font(.system(.body, design: .monospaced))
-                        .padding(16)
-                }
-            }
-        }
-        .background(Color(.systemGray))
-        .cornerRadius(8)
-        .padding(.vertical, 8)
-    }
-}
 
 struct BlockquoteView: View {
     let attributedText: AttributedString?
@@ -260,16 +238,6 @@ struct MixtapeEmbedView: View {
 
 
 
-struct ContentView2: View {
-    
-    
-    var body: some View {
-        VStack{
-            PostContentView()
-        }
-        
-    }
-}
 
 struct PostContentView: View {
     @StateObject var viewModel : PostContentViewModel = PostContentViewModel()
@@ -278,22 +246,32 @@ struct PostContentView: View {
     
     var body: some View {
         VStack{
-            
-            Text(viewModel.title)
-                .font(.title)
-                .padding()
-            Text(viewModel.subtitle)
-                .font(.subheadline)
-                .padding()
-            
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 0) {
-                    ForEach(viewModel.paragraphs) { paragraph in
-                        ParagraphView(paragraph: paragraph)
-                    }
+            if let hasError = viewModel.hasError{
+                
+                VStack{
+                    Text(hasError)
+                        .font(.headline)
+                        .foregroundColor(.red)
                 }
-                .padding()
+            }else{
+          
+                Text(viewModel.title)
+                    .font(.title)
+                    .padding()
+                Text(viewModel.subtitle)
+                    .font(.subheadline)
+                    .padding()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(viewModel.paragraphs) { paragraph in
+                            ParagraphView(paragraph: paragraph)
+                        }
+                    }
+                    .padding()
+                }
             }
+          
         }
         .onAppear{
             Task{

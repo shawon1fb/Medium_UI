@@ -1,6 +1,15 @@
 {
-  "originHash" : "6790b337b3920aee81ba45feb70c6dfd082b059957b1cb422f1abda26a2347de",
+  "originHash" : "41f463f1017600953a0230dd45e01a62447674b9e08ebd5bbdf2d0ed000ef9f2",
   "pins" : [
+    {
+      "identity" : "easyx",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shawon1fb/EasyX.git",
+      "state" : {
+        "revision" : "89ee9b985e47c9a0a4bb6317b41a19e0e5472415",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "easyxconnect",
       "kind" : "remoteSourceControl",
@@ -8,6 +17,15 @@
       "state" : {
         "revision" : "57c1c0653a0abb625fc08c3ae4c18bf91779c8b6",
         "version" : "1.0.9"
+      }
+    },
+    {
+      "identity" : "lottie-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-spm.git",
+      "state" : {
+        "revision" : "b842598f1295f3ffa1475b1580672d1fe5b83580",
+        "version" : "4.5.0"
       }
     },
     {

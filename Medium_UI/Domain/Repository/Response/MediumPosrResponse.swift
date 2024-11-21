@@ -43,7 +43,7 @@ struct Post: Codable {
     let previewContent: PreviewContent
     let pinnedByCreatorAt: Int
     let linkMetadataList: [LinkMetadataList]
-    let highlights: [Highlight]
+    let highlights: [HighlightModel]
     let responsesLocked: Bool
     let tags: [Tag]
     let content: Content

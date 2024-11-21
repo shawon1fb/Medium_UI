@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3613F6D32CEB8EB20034B5B2 /* MediumCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3613F6D22CEB8EB20034B5B2 /* MediumCore */; };
+		3661569C2CEF6F1E0088EF41 /* XSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3661569B2CEF6F1E0088EF41 /* XSwiftUI */; };
+		36C915662CEF9F01008861FD /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 36C915652CEF9F01008861FD /* HighlightSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36C915662CEF9F01008861FD /* HighlightSwift in Frameworks */,
 				3613F6D32CEB8EB20034B5B2 /* MediumCore in Frameworks */,
+				3661569C2CEF6F1E0088EF41 /* XSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +122,8 @@
 			name = Medium_UI;
 			packageProductDependencies = (
 				3613F6D22CEB8EB20034B5B2 /* MediumCore */,
+				3661569B2CEF6F1E0088EF41 /* XSwiftUI */,
+				36C915652CEF9F01008861FD /* HighlightSwift */,
 			);
 			productName = Medium_UI;
 			productReference = 3613F6992CEB8DA60034B5B2 /* Medium_UI.app */;
@@ -203,6 +209,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3613F6D12CEB8EB20034B5B2 /* XCLocalSwiftPackageReference "../MediumCore" */,
+				3661569A2CEF6F1E0088EF41 /* XCLocalSwiftPackageReference "../XSwiftUI" */,
+				36C915642CEF9F01008861FD /* XCLocalSwiftPackageReference "../HighlightSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3613F69A2CEB8DA60034B5B2 /* Products */;
@@ -566,12 +574,28 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../MediumCore;
 		};
+		3661569A2CEF6F1E0088EF41 /* XCLocalSwiftPackageReference "../XSwiftUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../XSwiftUI;
+		};
+		36C915642CEF9F01008861FD /* XCLocalSwiftPackageReference "../HighlightSwift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../HighlightSwift;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		3613F6D22CEB8EB20034B5B2 /* MediumCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MediumCore;
+		};
+		3661569B2CEF6F1E0088EF41 /* XSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = XSwiftUI;
+		};
+		36C915652CEF9F01008861FD /* HighlightSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HighlightSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
