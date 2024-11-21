@@ -186,7 +186,7 @@ struct Creator: Codable {
     let tippingLink: JSONNull?
     let viewerEdge: CreatorViewerEdge
     let socialStats: SocialStats
-    let newsletterV3: NewsletterV3
+    let newsletterV3: NewsletterV3?
     let isFollowing: JSONNull?
     let mediumMemberAt: Int
     let twitterScreenName: String
