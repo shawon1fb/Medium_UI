@@ -13,7 +13,7 @@ struct Medium_UIApp: App {
         WindowGroup {
 //            ContentView()
 //
-            ContentView2()
+            ContentView3()
         }
     }
 }
