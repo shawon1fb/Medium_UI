@@ -39,6 +39,7 @@ struct Paragraph: Codable, Identifiable {
         case outsetRowContinue = "OUTSET_ROW_CONTINUE"
         case fullWidth = "FULL_WIDTH"
         case insertCenter = "INSET_CENTER"
+        case outsetCenter = "OUTSET_CENTER"
     }
 }
 

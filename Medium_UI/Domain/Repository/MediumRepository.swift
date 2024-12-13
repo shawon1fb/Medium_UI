@@ -36,8 +36,13 @@ actor MediumRepository{
     
     func getPost2()async throws -> Post{
 //        let url = "https://medium.com/@itsuki.enjoy/swift-ios-real-time-human-traffic-tracker-01f1f6ade3f3"
-        let url = "https://medium.com/@amin-softtech/top-10-swiftui-errors-developers-face-and-how-to-fix-them-23f14a181d51"
+//        let url = "https://medium.com/@amin-softtech/top-10-swiftui-errors-developers-face-and-how-to-fix-them-23f14a181d51"
+        
 //        let url = "https://medium.com/glovo-engineering/linting-and-formatting-swift-code-in-our-apps-a49dc0a52332"
+        
+//        let url = "https://medium.com/@pp.palinda/parallel-processing-in-nestjs-6ecdbc533e1f"
+//        let url = "https://itnext.io/the-zsh-shell-tricks-i-wish-id-known-earlier-ae99e91c53c2"
+        let url = "https://medium.com/mongodb/what-are-ai-agents-from-virtual-assistants-to-intelligent-decision-makers-817b8b205f33"
         let postId = try await MediumParserUtility().resolveMediumURL(
             url
 //                                                                       "https://medium.com/@kalidoss.shanmugam/ios-animation-excellence-best-practices-and-solutions-for-common-issues-61f937748c39"
@@ -50,8 +55,9 @@ actor MediumRepository{
         do{
         
             let response: AppResponse<MediumPostResponse> = try DataToObjectConverter.dataToObject(data: data, statusCode: 200)
-            print(response)
+//            print(response)
             if let post = response.payload?.data.post{
+                print(post.toPrettyJson())
                 return post
             }
             throw NotFoundException()

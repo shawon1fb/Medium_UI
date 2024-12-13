@@ -93,3 +93,20 @@ extension String {
         return last[str2.count]
     }
 }
+extension Encodable {
+    func toPrettyJson() -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        do {
+            let jsonData = try encoder.encode(self)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
+            }
+        } catch {
+            print("Error encoding to JSON: \(error)")
+        }
+        
+        return "{}" // Return empty JSON object string in case of failure
+    }
+}

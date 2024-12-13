@@ -74,12 +74,12 @@ class PostContentViewModel: ObservableObject {
             let paragraph = content.bodyModel.paragraphs[currentIndex]
             
             // Skip title/subtitle/preview image in first paragraphs
-            if currentIndex < 4 {
-                if shouldSkipParagraph(paragraph) {
-                    currentIndex += 1
-                    continue
-                }
-            }
+//            if currentIndex < 4 {
+//                if shouldSkipParagraph(paragraph) {
+//                    currentIndex += 1
+//                    continue
+//                }
+//            }
             
             // Handle special paragraph types
             switch paragraph.type {

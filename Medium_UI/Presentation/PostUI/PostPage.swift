@@ -22,8 +22,8 @@ struct ParagraphView: View {
             HeaderView(text: paragraph.attributedText, level: .h3)
         case .h4:
             HeaderView(text: paragraph.attributedText, level: .h4)
-//        case .image:
-//            ImageParagraphView(paragraph: paragraph.original)
+        case .image:
+            ImageParagraphView(paragraph: paragraph.original)
         case .paragraph:
             ParagraphTextView(attributedText: paragraph.attributedText)
         case .unorderedList:
@@ -273,6 +273,7 @@ struct PostContentView: View {
             }
           
         }
+        .frame(maxWidth: 800)
         .onAppear{
             Task{
                await viewModel.getPostContent()
