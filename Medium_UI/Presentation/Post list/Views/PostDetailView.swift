@@ -30,10 +30,15 @@ struct PostDetailView: View {
 
           Text(post.toPrettyJson())
           .lineSpacing(8)
+//          .textSelectable()
       }
       .padding()
+        
+        .textSelection(.enabled)
+     
     }
     .frame(minWidth: 400)
+    
   }
 }
 struct TranslationView: View {
