@@ -31,7 +31,7 @@ struct PostRowView: View {
         HStack{
             MediaView(model: .image(url: post.previewImage.imageURL.absoluteString))
                 .frame(width: 160, height: 160)
-               // .cornerRadius(8, corners: .allCorners)
+                .cornerRadius(8, corners: .allCorners)
             
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
