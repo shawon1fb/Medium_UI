@@ -9,7 +9,7 @@ import SwiftUI
 
 // PostDetailView.swift
 struct PostDetailView: View {
-  let post: PostListModel
+  let post: PostSingleItem
 
   var body: some View {
     ScrollView {
@@ -19,16 +19,16 @@ struct PostDetailView: View {
           .bold()
 
         HStack {
-          Text(post.author)
+            Text(post.creator.name)
             .foregroundColor(.secondary)
           Spacer()
-          Text(post.date, style: .date)
+            Text(post.firstPublishedAt.description)
             .foregroundColor(.secondary)
         }
 
         Divider()
 
-        Text(post.content)
+          Text(post.toPrettyJson())
           .lineSpacing(8)
       }
       .padding()

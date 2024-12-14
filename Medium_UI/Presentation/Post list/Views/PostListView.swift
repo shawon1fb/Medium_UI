@@ -9,8 +9,8 @@ import SwiftUI
 
 // PostListView.swift
 struct PostListView: View {
-    let posts: [PostListModel]
-    @Binding var selectedPost: PostListModel?
+    let posts: [PostSingleItem]
+    @Binding var selectedPost: PostSingleItem?
     
     var body: some View {
         List(posts, selection: $selectedPost) { post in
@@ -23,12 +23,12 @@ struct PostListView: View {
 }
 
 struct PostRowView: View {
-    let post: PostListModel
+    let post: PostSingleItem
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                if post.isFeatured {
+                if post.isLocked {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
                 }
@@ -37,10 +37,10 @@ struct PostRowView: View {
             }
             
             HStack {
-                Text(post.author)
+                Text(post.creator.name)
                     .foregroundColor(.secondary)
                 Spacer()
-                Text("\(post.readingTime) min read")
+                Text("\(post.readingTime.int) min read")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

@@ -35,7 +35,11 @@ struct PostItemResponse: Codable {
 }
 
 // MARK: - Post
-struct PostSingleItem: Codable {
+struct PostSingleItem: Codable, Identifiable, Equatable, Hashable {
+    static func == (lhs: PostSingleItem, rhs: PostSingleItem) -> Bool {
+        lhs.id == rhs.id
+    }
+    
     let id, title: String
     let previewImage: PreviewImage
     let extendedPreviewContent: ExtendedPreviewContent
@@ -59,6 +63,10 @@ struct PostSingleItem: Codable {
         case creator, isPublished
         case mediumURL = "mediumUrl"
         case isLimitedState, allowResponses, postResponses, visibility, clapCount, isLocked, firstPublishedAt, latestPublishedAt, pinnedAt, readingTime, isSeries, uniqueSlug
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
