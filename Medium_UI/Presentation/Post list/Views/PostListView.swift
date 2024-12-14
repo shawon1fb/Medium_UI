@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import XSwiftUI
+import EasyX
 
 // PostListView.swift
 struct PostListView: View {
@@ -26,24 +28,42 @@ struct PostRowView: View {
     let post: PostSingleItem
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                if post.isLocked {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                }
-                Text(post.title)
-                    .font(.headline)
-            }
+        HStack{
+            MediaView(model: .image(url: post.previewImage.imageURL.absoluteString))
+                .frame(width: 160, height: 160)
+               // .cornerRadius(8, corners: .allCorners)
             
-            HStack {
-                Text(post.creator.name)
-                    .foregroundColor(.secondary)
-                Spacer()
-                Text("\(post.readingTime.int) min read")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    if post.isLocked {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                    }
+                    Text("Member Only")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                
+                Text(post.title)
+                    .font(.system(size: 20, weight: .semibold))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
+                Text(post.extendedPreviewContent.subtitle)
+                    .font(.system(size: 12, weight: .regular))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                
+                HStack {
+                    Text(post.creator.name)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("\(post.readingTime.int) min read")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
+            .padding(.horizontal, 8)
+            
+           
         }
         .padding(.vertical, 4)
     }
