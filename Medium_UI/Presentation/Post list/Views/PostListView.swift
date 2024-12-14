@@ -38,9 +38,13 @@ struct PostRowView: View {
                     if post.isLocked {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
+                        Text("Member Only")
+                            .font(.system(size: 12, weight: .semibold))
+                    }else{
+                        Text("Public")
+                            .font(.system(size: 12, weight: .semibold))
                     }
-                    Text("Member Only")
-                        .font(.system(size: 12, weight: .semibold))
+                    
                 }
                 
                 Text(post.title)
