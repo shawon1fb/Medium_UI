@@ -11,14 +11,14 @@ import SwiftUI
 struct ContentView3: View {
     @StateObject private var viewModel = PostViewModel()
     @State private var selectedPost: PostListModel?
-    
+    @State var columnVisibility: NavigationSplitViewVisibility = .automatic
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             PostListView(posts: viewModel.posts, selectedPost: $selectedPost)
         } content: {
             if let post = selectedPost {
-                PostDetailView(post: post)
-//                ContentView2()
+//                PostDetailView(post: post)
+                ContentView2()
             } else {
                 ContentUnavailableView("Select a Post",
                     systemImage: "doc.text")
@@ -200,3 +200,10 @@ struct TranslationView: View {
         .animation(.easeInOut, value: isSplitViewCollapsed)
     }
 }
+
+
+#Preview(body: {
+    VStack{
+        Image(systemName: "sidebar.left")
+    }
+})

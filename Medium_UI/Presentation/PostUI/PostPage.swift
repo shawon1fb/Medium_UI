@@ -273,7 +273,7 @@ struct PostContentView: View {
             }
           
         }
-        .frame(maxWidth: 800)
+//        .frame(maxWidth: 800)
         .onAppear{
             Task{
                await viewModel.getPostContent()
