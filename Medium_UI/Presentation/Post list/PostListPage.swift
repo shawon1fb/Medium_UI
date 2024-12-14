@@ -17,8 +17,8 @@ struct ContentView3: View {
             PostListView(posts: viewModel.posts, selectedPost: $selectedPost)
         } content: {
             if let post = selectedPost {
-//                PostDetailView(post: post)
-                ContentView2()
+                PostDetailView(post: post)
+//                ContentView2()
             } else {
                 ContentUnavailableView("Select a Post",
                     systemImage: "doc.text")
@@ -77,47 +77,6 @@ class PostViewModel: ObservableObject {
     }
 }
 
-// PostListView.swift
-struct PostListView: View {
-    let posts: [PostListModel]
-    @Binding var selectedPost: PostListModel?
-    
-    var body: some View {
-        List(posts, selection: $selectedPost) { post in
-            PostRowView(post: post)
-                .tag(post)
-        }
-        .navigationTitle("Posts")
-        .listStyle(.inset)
-    }
-}
-
-struct PostRowView: View {
-    let post: PostListModel
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                if post.isFeatured {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                }
-                Text(post.title)
-                    .font(.headline)
-            }
-            
-            HStack {
-                Text(post.author)
-                    .foregroundColor(.secondary)
-                Spacer()
-                Text("\(post.readingTime) min read")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .padding(.vertical, 4)
-    }
-}
 
 // PostDetailView.swift
 struct PostDetailView: View {

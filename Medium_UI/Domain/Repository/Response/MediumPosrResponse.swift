@@ -183,19 +183,19 @@ struct Section: Codable {
 struct Creator: Codable {
     let typename, id, imageID, username: String
     let name, bio: String
-    let tippingLink: JSONNull?
-    let viewerEdge: CreatorViewerEdge
-    let socialStats: SocialStats
+    
+    
+    let socialStats: SocialStats?
     let newsletterV3: NewsletterV3?
-    let isFollowing: JSONNull?
-    let mediumMemberAt: Int
-    let twitterScreenName: String
+    
+    let mediumMemberAt: Int?
+    let twitterScreenName: String?
 
     enum CodingKeys: String, CodingKey {
         case typename = "__typename"
         case id
         case imageID = "imageId"
-        case username, name, bio, tippingLink, viewerEdge, socialStats, newsletterV3, isFollowing, mediumMemberAt, twitterScreenName
+        case username, name, bio, socialStats, newsletterV3, mediumMemberAt, twitterScreenName
     }
 }
 
