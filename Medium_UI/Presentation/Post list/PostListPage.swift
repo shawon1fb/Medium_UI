@@ -25,7 +25,7 @@ struct ContentView3: View {
             }
         } detail: {
             if let post = selectedPost {
-                TranslationView(originalContent: post.content)
+                TranslationView()
             } else {
                 ContentUnavailableView("Select a Post to View Translation",
                     systemImage: "doc.text.translation")
@@ -76,90 +76,6 @@ class PostViewModel: ObservableObject {
         ]
     }
 }
-
-
-// PostDetailView.swift
-struct PostDetailView: View {
-    let post: PostListModel
-    
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text(post.title)
-                    .font(.largeTitle)
-                    .bold()
-                
-                HStack {
-                    Text(post.author)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(post.date, style: .date)
-                        .foregroundColor(.secondary)
-                }
-                
-                Divider()
-                
-                Text(post.content)
-                    .lineSpacing(8)
-            }
-            .padding()
-        }
-        .navigationTitle("Article")
-        .frame(minWidth: 400)
-    }
-}
-struct TranslationView: View {
-    let originalContent: String
-    @State private var selectedLanguage = "Spanish"
-    @State private var isExpanded = true
-    @State private var isSplitViewCollapsed = true
-    let availableLanguages = ["Spanish", "French", "German", "Chinese"]
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Custom toolbar with split view toggle
-            HStack {
-                Button(action: {
-                    isSplitViewCollapsed.toggle()
-                }) {
-                    Image(systemName: isSplitViewCollapsed ? "rectangle.portrait.leftthird.inset.filled" : "rectangle.portrait.leftthird.inset")
-                        .foregroundColor(.secondary)
-                }
-                .buttonStyle(.borderless)
-                .help("Toggle Translation Panel")
-                
-                Spacer()
-            }
-            .padding(.bottom, 8)
-            .frame(width: 50, height: 50)
-            
-            VStack{
-                // Translation content
-                if !isSplitViewCollapsed {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Picker("Translation Language", selection: $selectedLanguage) {
-                            ForEach(availableLanguages, id: \.self) { language in
-                                Text(language).tag(language)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        
-                        ScrollView {
-                            Text("Translated content would appear here...")
-                                .lineSpacing(8)
-                        }
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity)
-        }
-        .padding()
-        .navigationTitle("Translation")
-        .frame(minWidth: 300)
-        .animation(.easeInOut, value: isSplitViewCollapsed)
-    }
-}
-
 
 #Preview(body: {
     VStack{
