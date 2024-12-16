@@ -12,7 +12,7 @@ import EasyX
 import XSwiftUI
 
 struct ParagraphView: View {
-    let paragraph: PostContentViewModel.ParsedParagraph
+    let paragraph: ParsedParagraph
     
     var body: some View {
         switch paragraph.original.type {
