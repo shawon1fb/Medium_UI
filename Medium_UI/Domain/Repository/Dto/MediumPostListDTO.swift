@@ -17,14 +17,14 @@ struct MediumPostListDTO: DTO {
 
 // MARK: - Variables
 struct PostListVariables: Codable {
-    let forceRank: Bool =  false
+    var forceRank: Bool =  false
     let paging: Paging
 }
 
 // MARK: - Paging
 struct Paging: Codable {
     let to: String?
-    let limit: Int = 10
+    var limit: Int = 10
     let source: String?
 }
 
