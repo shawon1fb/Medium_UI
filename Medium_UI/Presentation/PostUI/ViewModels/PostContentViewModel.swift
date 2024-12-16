@@ -24,21 +24,13 @@ class PostContentViewModel: ObservableObject {
     let repository: MediumRepository = MediumRepository()
     @Published var previewImageId: String = ""
     @Published  var highlights: [HighlightModel] = []
-    @Published var tags: [Tag] = []
+    @Published var tags: [PostTag] = []
     
     @Published var hasError: String? =  nil
     
-    struct Tag: Codable {
-        let displayTitle: String
-    }
+ 
     
-    struct ParsedParagraph: Identifiable {
-        var id: String { original.id.uuidString }
-        let original: Paragraph
-        let attributedText: AttributedString?
-        let isHighlighted: Bool
-    }
-    
+  
    
     init(){
         
@@ -74,12 +66,12 @@ class PostContentViewModel: ObservableObject {
             let paragraph = content.bodyModel.paragraphs[currentIndex]
             
             // Skip title/subtitle/preview image in first paragraphs
-//            if currentIndex < 4 {
-//                if shouldSkipParagraph(paragraph) {
-//                    currentIndex += 1
-//                    continue
-//                }
-//            }
+            if currentIndex < 4 {
+                if shouldSkipParagraph(paragraph) {
+                    currentIndex += 1
+                    continue
+                }
+            }
             
             // Handle special paragraph types
             switch paragraph.type {
