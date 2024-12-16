@@ -12,37 +12,10 @@ struct PostDetailView: View {
   let post: PostSingleItem
 
   var body: some View {
-    ScrollView {
-      VStack(alignment: .leading, spacing: 16) {
-        Text(post.title)
-          .font(.largeTitle)
-          .bold()
-
-        HStack {
-            Text(post.creator.name)
-            .foregroundColor(.secondary)
-          Spacer()
-            Text(post.firstPublishedAt.description)
-            .foregroundColor(.secondary)
-        }
-
-        Divider()
-
-//          Text(post.toPrettyJson())
-//          .lineSpacing(8)
-//          .textSelectable()
-          
-          PostContentView()
-      }
-      .padding()
-        
-        .textSelection(.enabled)
-     
-    }
-    .frame(minWidth: 400)
-    
+      PostDetailConatiner(post: post)
   }
 }
+
 struct TranslationView: View {
  
   @State private var selectedLanguage = "Spanish"
