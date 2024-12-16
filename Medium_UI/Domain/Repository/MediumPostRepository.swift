@@ -25,7 +25,7 @@ actor MediumPostRepository: IMediumRepository {
     do {
 
       var postsList: [PostSingleItem] = []
-      var headers: [String: String] = [
+        let headers: [String: String] = [
         "Pragma": "no-cache",
         "graphql-operation": "WebInlineRecommendedFeedQuery",
         "medium-frontend-path": "/",
