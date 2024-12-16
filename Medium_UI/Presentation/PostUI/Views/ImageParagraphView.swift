@@ -25,7 +25,7 @@ struct ImageParagraphView: View {
                 return .infinity
             case .row:
                 #if os(macOS)
-                let width = containerWidth ?? (NSScreen.main?.frame.width ?? 800)
+                let width = containerWidth ?? (NSScreen.main?.frame.width ?? 700)
                 #else
                 let width = containerWidth ?? (UIScreen.main.bounds.width)
                 #endif

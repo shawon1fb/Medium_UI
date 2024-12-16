@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import EasyX
+import XSwiftUI
 
 struct PostDetailConatiner: View {
   let post: PostSingleItem
@@ -43,6 +45,7 @@ struct PostDetailConatiner: View {
     .frame(minWidth: 400)
     .task {
         await postDetailsVM.getPostContentByID(postID: post.id)
+//        await postDetailsVM.getPostContentByID(postID: "f64769a60d03")
     }
   }
 }
@@ -71,6 +74,7 @@ struct PostBodyContentView: View {
                 }
             }else{
           
+               
                 Text(viewModel.title)
                     .font(.title)
                     .padding()

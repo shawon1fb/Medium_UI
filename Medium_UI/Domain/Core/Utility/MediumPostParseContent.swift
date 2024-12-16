@@ -70,6 +70,7 @@ class MediumPostParseContent {
         // Skip title
         if paragraph.type == .h3 || paragraph.type == .h4 || paragraph.type == .h2 {
             if let text = paragraph.text, text.percentageMatch(with: title) > 80 {
+                print("skipping title")
                 return true
             }
         }
