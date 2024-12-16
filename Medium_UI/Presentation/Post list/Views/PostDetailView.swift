@@ -28,9 +28,11 @@ struct PostDetailView: View {
 
         Divider()
 
-          Text(post.toPrettyJson())
-          .lineSpacing(8)
+//          Text(post.toPrettyJson())
+//          .lineSpacing(8)
 //          .textSelectable()
+          
+          PostContentView()
       }
       .padding()
         

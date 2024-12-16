@@ -32,6 +32,7 @@ struct ContentView3: View {
             }
         }
         .navigationSplitViewStyle(.balanced)
+        .navigationTitle("Medium")
         .task {
             await viewModel.fetchPosts()
         }
