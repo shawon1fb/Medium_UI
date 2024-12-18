@@ -10,19 +10,13 @@ import SwiftUI
 
 struct ContentView3: View {
     @StateObject private var viewModel = PostListViewModelBindings().getDependencies()
-    @State private var selectedPost: PostSingleItem?
+    @State  var selectedPost: PostSingleItem?
     @State var columnVisibility: NavigationSplitViewVisibility = .automatic
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             PostListView(posts: viewModel.posts, selectedPost: $selectedPost)
         } content: {
-            if let post = selectedPost {
-                PostDetailView(post: post)
-//                ContentView2()
-            } else {
-                ContentUnavailableView("Select a Post",
-                    systemImage: "doc.text")
-            }
+            PostDetailView(post: $selectedPost)
         } detail: {
             if let _ = selectedPost {
                 TranslationView()
@@ -31,7 +25,7 @@ struct ContentView3: View {
                     systemImage: "doc.text.translation")
             }
         }
-        .navigationSplitViewStyle(.balanced)
+        .navigationSplitViewStyle(.prominentDetail)
         .navigationTitle("Medium")
         .task {
             await viewModel.fetchPosts()

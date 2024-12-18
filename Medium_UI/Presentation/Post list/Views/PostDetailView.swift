@@ -9,10 +9,18 @@ import SwiftUI
 
 // PostDetailView.swift
 struct PostDetailView: View {
-  let post: PostSingleItem
+    @Binding var post: PostSingleItem?
 
   var body: some View {
-      PostDetailConatiner(post: post)
+      VStack{
+          if let post  = post{
+              PostDetailConatiner(post: post)
+          }else{
+              ContentUnavailableView("Select a Post",
+                  systemImage: "doc.text")
+          }
+      }
+    
   }
 }
 

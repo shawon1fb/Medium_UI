@@ -12,11 +12,11 @@ import XSwiftUI
 struct PostDetailConatiner: View {
   let post: PostSingleItem
     
-    @StateObject var postDetailsVM: PostDetailsViewModel
+    @ObservedObject var postDetailsVM: PostDetailsViewModel
     
     init(post: PostSingleItem) {
         self.post = post
-        _postDetailsVM = StateObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
+        _postDetailsVM = ObservedObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
     }
     
     
@@ -24,8 +24,10 @@ struct PostDetailConatiner: View {
     ScrollView {
       VStack(alignment: .leading, spacing: 16) {
         Text(post.title)
+        Text(post.title)
           .font(.largeTitle)
           .bold()
+         
 
         HStack {
           Text(post.creator.name)
@@ -37,16 +39,13 @@ struct PostDetailConatiner: View {
         Divider()
           PostBodyContentView(post: post)
       }
+        
+     
       .padding()
-
       .textSelection(.enabled)
 
     }
     .frame(minWidth: 400)
-    .task {
-        await postDetailsVM.getPostContentByID(postID: post.id)
-//        await postDetailsVM.getPostContentByID(postID: "f64769a60d03")
-    }
   }
 }
 
@@ -92,6 +91,13 @@ struct PostBodyContentView: View {
                 }
             }
           
+        }
+        .onAppear(perform: {
+            print("onAppear called for post \(post.id)")
+        })
+        .task {
+            print("task called for post \(post.id)")
+            await viewModel.getPostContentByID(postID: post.id)
         }
     }
 }
