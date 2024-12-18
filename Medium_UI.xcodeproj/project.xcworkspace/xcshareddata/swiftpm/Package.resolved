@@ -1,5 +1,5 @@
 {
-  "originHash" : "6dc7a754602c3637da32fb4087a31aea0dec72c5664c957a516eb66c6ec16c6f",
+  "originHash" : "41cfe61bba7b613b0e0abb0b2df97723522b84ee988374c429db7119bf3ac3dc",
   "pins" : [
     {
       "identity" : "easyx",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "57c1c0653a0abb625fc08c3ae4c18bf91779c8b6",
         "version" : "1.0.9"
+      }
+    },
+    {
+      "identity" : "highlightswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/appstefan/HighlightSwift.git",
+      "state" : {
+        "revision" : "784ca3ccfc8a2cf724fbb2f06cb6ec3329424da3",
+        "version" : "1.1.0"
       }
     },
     {
@@ -56,12 +65,30 @@
       }
     },
     {
+      "identity" : "swift-medium-core",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shawon1fb/Swift-Medium-Core.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "50e3b2a849d29745e1e383568736541162549faa"
+      }
+    },
+    {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
         "revision" : "0837db354faf9c9deb710dc597046edaadf5360f",
         "version" : "2.7.6"
+      }
+    },
+    {
+      "identity" : "xswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shawon1fb/XSwiftUI.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f868c5e1900364ae40598f949526a0527cc66196"
       }
     }
   ],

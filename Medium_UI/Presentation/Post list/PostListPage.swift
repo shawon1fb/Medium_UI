@@ -24,7 +24,7 @@ struct ContentView3: View {
                     systemImage: "doc.text")
             }
         } detail: {
-            if let post = selectedPost {
+            if let _ = selectedPost {
                 TranslationView()
             } else {
                 ContentUnavailableView("Select a Post to View Translation",

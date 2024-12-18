@@ -40,8 +40,8 @@ struct ParagraphView: View {
             MixtapeEmbedView(paragraph: paragraph.original)
         case .iframe:
             IframeView(paragraph: paragraph.original)
-        default:
-            Text("")
+//        default:
+//            Text("")
         }
     }
 }

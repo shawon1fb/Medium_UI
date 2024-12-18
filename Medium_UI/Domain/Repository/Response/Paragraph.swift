@@ -8,7 +8,7 @@
 import Foundation
 
 struct Paragraph: Codable, Identifiable {
-    let id = UUID()
+    let id:UUID = UUID()
     let type: ParagraphType
     let text: String?
     let name: String?
@@ -18,6 +18,31 @@ struct Paragraph: Codable, Identifiable {
     let codeBlockMetadata: CodeBlockMetadata?
     let mixtapeMetadata: MixtapeMetadata?
     let iframe: IframeData?
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.type = try container.decode(Paragraph.ParagraphType.self, forKey: .type)
+        self.text = try container.decodeIfPresent(String.self, forKey: .text)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        self.markups = try container.decode([Markup].self, forKey: .markups)
+        self.layout = try container.decodeIfPresent(Paragraph.LayoutType.self, forKey: .layout)
+        self.metadata = try container.decodeIfPresent(ImageMetadata.self, forKey: .metadata)
+        self.codeBlockMetadata = try container.decodeIfPresent(CodeBlockMetadata.self, forKey: .codeBlockMetadata)
+        self.mixtapeMetadata = try container.decodeIfPresent(MixtapeMetadata.self, forKey: .mixtapeMetadata)
+        self.iframe = try container.decodeIfPresent(IframeData.self, forKey: .iframe)
+    }
+    
+    enum CododingKeys: String, CodingKey {
+        case type
+        case text
+        case name
+        case markups
+        case layout
+        case metadata
+        case codeBlockMetadata
+        case mixtapeMetadata
+        case iframe
+    }
     
     enum ParagraphType: String, Codable {
         case h2 = "H2"
