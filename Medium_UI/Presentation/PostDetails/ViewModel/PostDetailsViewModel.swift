@@ -22,11 +22,12 @@ import XSwiftUI
 final class PostDetailsViewModelBindings {
   func getDependencies(post: PostSingleItem) -> PostDetailsViewModel {
 
+      print("new view model for \(post.id)")
     if let viewModel = try? DIContainer.shared.resolve(PostDetailsViewModel.self, name: post.id) {
       return viewModel
     } else {
       let repository = MediumPostRepositoryBindings().getDependencies()
-      let viewModel = PostDetailsViewModel(repository: repository)
+        let viewModel = PostDetailsViewModel(repository: repository, postID: post.id)
 
       DIContainer.shared.register(
         PostDetailsViewModel.self, name: post.id, factory: { _ in viewModel })
@@ -46,15 +47,19 @@ class PostDetailsViewModel: ObservableObject {
   @Published var tags: [PostTag] = []
 
   @Published var hasError: String? = nil
+    @Published var loading: Bool = false
 
-  init(repository: IMediumRepository) {
+    init(repository: IMediumRepository, postID: String) {
     self.repository = repository
-
+        Task{
+           await getPostContentByID(postID: postID)
+        }
   }
 
   @MainActor
   func getPostContentByID(postID: String) async {
     do {
+        loading = true
       hasError = nil
         print("postid \(postID)")
       let post = try await repository.getPostByID(postID: postID)
@@ -70,9 +75,11 @@ class PostDetailsViewModel: ObservableObject {
         
           print("after parsing -> \(paragraphs.count)")
 
+        loading = false
     } catch {
       print("error fetching post: \(error)")
       hasError = error.localizedDescription
+        loading = false
     }
   }
 }

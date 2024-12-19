@@ -16,7 +16,12 @@ struct ContentView3: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             PostListView(posts: viewModel.posts, selectedPost: $selectedPost)
         } content: {
-            PostDetailView(post: $selectedPost)
+            if let post  = selectedPost{
+                PostDetailConatiner(post: post)
+            }else{
+                ContentUnavailableView("Select a Post",
+                    systemImage: "doc.text")
+            }
         } detail: {
             if let _ = selectedPost {
                 TranslationView()
@@ -34,7 +39,5 @@ struct ContentView3: View {
 }
 
 #Preview(body: {
-    VStack{
-        Image(systemName: "sidebar.left")
-    }
+    ContentView3()
 })

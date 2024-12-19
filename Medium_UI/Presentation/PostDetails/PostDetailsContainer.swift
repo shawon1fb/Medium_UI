@@ -12,11 +12,11 @@ import XSwiftUI
 struct PostDetailConatiner: View {
   let post: PostSingleItem
     
-    @ObservedObject var postDetailsVM: PostDetailsViewModel
+    @StateObject var postDetailsVM: PostDetailsViewModel
     
     init(post: PostSingleItem) {
         self.post = post
-        _postDetailsVM = ObservedObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
+        _postDetailsVM = StateObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
     }
     
     
@@ -73,6 +73,7 @@ struct PostBodyContentView: View {
                 }
             }else{
           
+                
                
                 Text(viewModel.title)
                     .font(.title)
@@ -81,23 +82,35 @@ struct PostBodyContentView: View {
                     .font(.subheadline)
                     .padding()
                 
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(viewModel.paragraphs) { paragraph in
-                            ParagraphView(paragraph: paragraph)
+                if viewModel.loading{
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                }else{
+                    
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 0) {
+                            ForEach(viewModel.paragraphs) { paragraph in
+                                ParagraphView(paragraph: paragraph)
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
+                
             }
           
         }
+//        .onChange(of: post.id) { _ in
+//                 Task {
+//                     await viewModel.getPostContentByID(postID: post.id)
+//                 }
+//             }
         .onAppear(perform: {
             print("onAppear called for post \(post.id)")
         })
         .task {
             print("task called for post \(post.id)")
-            await viewModel.getPostContentByID(postID: post.id)
+          //  await viewModel.getPostContentByID(postID: post.id)
         }
     }
 }
