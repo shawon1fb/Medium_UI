@@ -85,6 +85,8 @@ struct PostBodyContentView: View {
                 if viewModel.loading{
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    
+                    
                 }else{
                     
                     ScrollView {
