@@ -23,8 +23,8 @@ struct ContentView3: View {
                     systemImage: "doc.text")
             }
         } detail: {
-            if let _ = selectedPost {
-                TranslationView(text: "Hello, how are you?")
+            if let post = selectedPost {
+                TranslationDetailsView(post: post)
             } else {
                 ContentUnavailableView("Select a Post to View Translation",
                     systemImage: "doc.text.translation")
@@ -41,3 +41,30 @@ struct ContentView3: View {
 #Preview(body: {
     ContentView3()
 })
+
+
+struct TranslationDetailsView:View {
+    let post: PostSingleItem
+      
+      @StateObject var postDetailsVM: PostDetailsViewModel
+      
+      init(post: PostSingleItem) {
+          self.post = post
+          _postDetailsVM = StateObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
+      }
+      
+    var body: some View {
+        VStack{
+            if postDetailsVM.loading{
+                ProgressView()
+            }else{
+                if let text = postDetailsVM.asText{
+                    TranslationView(text: text)
+                }else{
+                    Text("text not found")
+                }
+                
+            }
+        }
+    }
+}

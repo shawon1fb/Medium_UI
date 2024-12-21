@@ -88,7 +88,6 @@ struct PostBodyContentView: View {
                     
                     
                 }else{
-                    
                     ScrollView {
                         VStack(alignment: .leading, spacing: 0) {
                             ForEach(viewModel.paragraphs) { paragraph in

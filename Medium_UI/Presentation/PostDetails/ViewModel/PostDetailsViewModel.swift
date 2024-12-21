@@ -45,9 +45,10 @@ class PostDetailsViewModel: ObservableObject {
   @Published var previewImageId: String = ""
   @Published var highlights: [HighlightModel] = []
   @Published var tags: [PostTag] = []
-
+    
   @Published var hasError: String? = nil
     @Published var loading: Bool = false
+    @Published var asText:String? = nil
 
     init(repository: IMediumRepository, postID: String) {
     self.repository = repository
@@ -74,7 +75,7 @@ class PostDetailsViewModel: ObservableObject {
         paragraphs = MediumPostParseContent.parseContent(post.content, title: title, subtitle: subtitle, previewImageId: previewImageId, tags: tags, highlights: highlights)
         
           print("after parsing -> \(paragraphs.count)")
-
+        asText = post.content.bodyModel.getAllText()
         loading = false
     } catch {
       print("error fetching post: \(error)")

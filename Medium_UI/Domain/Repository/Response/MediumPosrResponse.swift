@@ -78,6 +78,11 @@ struct BodyModel: Codable {
     case typename = "__typename"
     case sections, paragraphs
   }
+    
+    func getAllText() -> String {
+        return paragraphs.compactMap { $0.text }.joined(separator: "\n")
+    }
+
 }
 
 // MARK: - Paragraph
