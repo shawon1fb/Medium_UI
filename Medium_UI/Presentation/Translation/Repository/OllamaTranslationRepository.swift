@@ -4,26 +4,24 @@
 //
 //  Created by Shahanul Haque on 12/21/24.
 //
-
-import Foundation
 import Foundation
 
-import Foundation
+struct OllamaRestResponse: Codable {
+    let response: String
+    let done: Bool
+}
 
-class OllamaTranslationRepository: TranslationService {
+actor OllamaTranslationRepository: TranslationService {
     private let baseURL = "http://192.168.0.213:11434/api/generate"
     private let model = "gemma2:latest"
     private var currentTask: Task<Void, Error>?
     
     // Configuration
     private let maxChunkSize = 2000
-    private let maxConcurrentRequests = 2  // Limit concurrent API calls
-    private let requestDelay: TimeInterval = 0.5  // Add delay between requests
+    private let maxConcurrentRequests = 2
+    private let requestDelay: TimeInterval = 0.3
     
-    // Semaphore to control concurrent API calls
-    private let requestSemaphore = DispatchSemaphore(value: 2)
-    
-    // URLSession configuration for better resource management
+    // Optimized URLSession configuration
     private lazy var urlSession: URLSession = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
@@ -33,12 +31,30 @@ class OllamaTranslationRepository: TranslationService {
         return URLSession(configuration: config)
     }()
     
-    func cancelTranslation() {
-        currentTask?.cancel()
-        currentTask = nil
+    // Active translations tracking
+    private var activeTranslations: Set<UUID> = []
+    
+    nonisolated func cancelTranslation() {
+        Task { await _cancelTranslation() }
     }
     
-    private func splitTextIntoSentences(_ text: String) -> [String] {
+    private func _cancelTranslation() {
+        currentTask?.cancel()
+        currentTask = nil
+        activeTranslations.removeAll()
+    }
+    
+    private func trackTranslation(_ id: UUID) -> Bool {
+        guard !activeTranslations.contains(id) else { return false }
+        activeTranslations.insert(id)
+        return true
+    }
+    
+    private func untrackTranslation(_ id: UUID) {
+        activeTranslations.remove(id)
+    }
+    
+    private nonisolated func splitTextIntoSentences(_ text: String) -> [String] {
         let terminators = [".", "!", "?", "。", "！", "？"]
         let paragraphs = text.components(separatedBy: "\n")
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -100,7 +116,7 @@ class OllamaTranslationRepository: TranslationService {
         return sentences.filter { !$0.isEmpty }
     }
     
-    private func createRequest(text: String, from: Language, to: Language) throws -> URLRequest {
+    private nonisolated func translateChunk(text: String, from: Language, to: Language) async throws -> String {
         let prompt = """
         Translate the following text from \(from.rawValue) to \(to.rawValue):
         "\(text)"
@@ -110,7 +126,7 @@ class OllamaTranslationRepository: TranslationService {
         let body: [String: Any] = [
             "model": model,
             "prompt": prompt,
-            "stream": true
+            "stream": false
         ]
         
         guard let url = URL(string: baseURL),
@@ -122,87 +138,77 @@ class OllamaTranslationRepository: TranslationService {
         request.httpMethod = "POST"
         request.httpBody = jsonData
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        return request
+        
+        let (data, _) = try await urlSession.data(for: request)
+        let response = try JSONDecoder().decode(OllamaRestResponse.self, from: data)
+        
+        // Add delay between requests
+        try await Task.sleep(nanoseconds: UInt64(requestDelay * 1_000_000_000))
+        
+        return response.response
     }
     
-    private func translateChunk(text: String, from: Language, to: Language) async throws -> AsyncStream<String> {
+    nonisolated func translate(text: String, from: Language, to: Language) async throws -> AsyncStream<String> {
+        let translationId = UUID()
+        
         return AsyncStream { continuation in
             Task {
-                // Wait for semaphore
-                let _ = requestSemaphore.wait(timeout: .now() + 30)
-                defer { requestSemaphore.signal() }
+                // Check if we can start this translation
+                guard await trackTranslation(translationId) else {
+                    continuation.finish()
+                    return
+                }
+                
+                defer {
+                    Task {
+                        await untrackTranslation(translationId)
+                    }
+                }
                 
                 do {
-                    let request = try createRequest(text: text, from: from, to: to)
-                    let (stream, _) = try await urlSession.bytes(for: request)
+                    let sentences = splitTextIntoSentences(text)
+                    var isFirstChunk = true
                     
-                    for try await line in stream.lines {
-                        if Task.isCancelled {
-                            break
-                        }
+                    // Process chunks in batches
+                    for chunk in stride(from: 0, to: sentences.count, by: maxConcurrentRequests) {
+                        if Task.isCancelled { break }
                         
-                        guard let data = line.data(using: .utf8),
-                              let response = try? JSONDecoder().decode(OllamaResponse.self, from: data) else {
-                            continue
-                        }
-                        continuation.yield(response.response)
-                    }
-                    
-                    // Add delay between requests
-                    try await Task.sleep(nanoseconds: UInt64(requestDelay * 1_000_000_000))
-                    
-                } catch {
-                    if !Task.isCancelled {
-                        print("Translation error: \(error)")
-                    }
-                }
-                continuation.finish()
-            }
-        }
-    }
-    
-    func translate(text: String, from: Language, to: Language) async throws -> AsyncStream<String> {
-        return AsyncStream { continuation in
-            currentTask = Task {
-                let sentences = splitTextIntoSentences(text)
-                var isFirstChunk = true
-                
-                // Process chunks in batches to reduce memory usage
-                for chunk in stride(from: 0, to: sentences.count, by: maxConcurrentRequests) {
-                    if Task.isCancelled { break }
-                    
-                    let endIndex = min(chunk + maxConcurrentRequests, sentences.count)
-                    let batch = sentences[chunk..<endIndex]
-                    
-                    // Process batch concurrently
-                    try await withThrowingTaskGroup(of: (Int, String).self) { group in
-                        for (index, sentence) in batch.enumerated() {
-                            group.addTask {
-                                var result = ""
-                                let stream = try await self.translateChunk(text: sentence, from: from, to: to)
-                                for try await translation in stream {
-                                    result += translation
+                        let endIndex = min(chunk + maxConcurrentRequests, sentences.count)
+                        let batch = sentences[chunk..<endIndex]
+                        
+                        // Process batch concurrently
+                        try await withThrowingTaskGroup(of: (Int, String).self) { group in
+                            for (index, sentence) in batch.enumerated() {
+                                group.addTask {
+                                    let translation = try await self.translateChunk(
+                                        text: sentence,
+                                        from: from,
+                                        to: to
+                                    )
+                                    return (chunk + index, translation)
                                 }
-                                return (chunk + index, result)
                             }
-                        }
-                        
-                        // Collect and yield results in order
-                        var batchResults: [(Int, String)] = []
-                        for try await result in group {
-                            batchResults.append(result)
-                        }
-                        
-                        for (_, translation) in batchResults.sorted(by: { $0.0 < $1.0 }) {
-                            if !isFirstChunk {
-                                continuation.yield(" ")
+                            
+                            // Collect and yield results in order
+                            var batchResults: [(Int, String)] = []
+                            for try await result in group {
+                                batchResults.append(result)
                             }
-                            isFirstChunk = false
-                            continuation.yield(translation)
+                            
+                            for (_, translation) in batchResults.sorted(by: { $0.0 < $1.0 }) {
+                                if Task.isCancelled { break }
+                                
+                                if !isFirstChunk {
+                                    continuation.yield(" ")
+                                }
+                                isFirstChunk = false
+                                continuation.yield(translation)
+                            }
                         }
                     }
+                } catch {
+                    print("Translation error: \(error)")
                 }
-                
                 continuation.finish()
             }
         }

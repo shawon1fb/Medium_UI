@@ -9,7 +9,7 @@ import Foundation
 // Translation Protocol (Interface Segregation Principle)
 protocol TranslationService {
     func translate(text: String, from: Language, to: Language) async throws -> AsyncStream<String>
-    func cancelTranslation() // Add cancellation method
+    func cancelTranslation() async // Add cancellation method
 }
 class MockTranslationService: TranslationService {
     private var continuations: [UUID: AsyncStream<String>.Continuation] = [:]

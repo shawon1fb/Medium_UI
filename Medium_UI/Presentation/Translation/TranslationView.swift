@@ -5,20 +5,16 @@ import SwiftUI
 
 
 
-
-
-// MARK: - View Layer
 struct TranslationView: View {
     @StateObject private var viewModel: TranslationViewModel
     let text: String
+    @State private var currentTask: Task<Void, Never>?
     
     init(text: String) {
         self._viewModel = StateObject(
             wrappedValue: TranslationViewModelBindings().getDependencies()
         )
         self.text = text
-        
-        TranslationViewModelBindings().getDependencies().translate(text: text)
     }
     
     var body: some View {
@@ -33,14 +29,17 @@ struct TranslationView: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
             .onChange(of: viewModel.selectedLanguage) { _ in
-                viewModel.translate(text: text)
+                // Cancel any existing task
+                currentTask?.cancel()
+                // Create and store new task
+                currentTask = Task {
+                    await viewModel.translate(text: text)
+                }
             }
             
             ScrollView {
                 VStack {
-                    
-                    
-                    // Translated text card
+                    // Original text card
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Original Text")
                             .font(.subheadline)
@@ -89,10 +88,14 @@ struct TranslationView: View {
             }
             
             Text("is translating \(viewModel.isTranslating ? "true" : "false")")
+            
             // Control Buttons
             if viewModel.isTranslating {
                 Button(action: {
-                    viewModel.stopTranslation()
+                    currentTask?.cancel()
+                    Task {
+                        await viewModel.stopTranslation()
+                    }
                 }) {
                     HStack(spacing: 8) {
                         Image(systemName: "stop.fill")
@@ -122,7 +125,12 @@ struct TranslationView: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0), value: viewModel.isTranslating)
             } else {
                 Button(action: {
-                    viewModel.translate(text: text)
+                    // Cancel any existing task
+                    currentTask?.cancel()
+                    // Create and store new task
+                    currentTask = Task {
+                        await viewModel.translate(text: text)
+                    }
                 }) {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.clockwise")
@@ -151,17 +159,20 @@ struct TranslationView: View {
                 .scaleEffect(1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0), value: !viewModel.isTranslating)
             }
-            
-            
-          
         }
         .padding(.vertical)
-        .onAppear {
-            viewModel.translate(text: text)
+        .task {
+            // Create and store initial translation task
+            currentTask = Task {
+                await viewModel.translate(text: text)
+            }
+        }
+        .onDisappear {
+            // Clean up any running task when view disappears
+            currentTask?.cancel()
         }
     }
 }
-
 // MARK: - Preview Provider
 struct TranslationView_Previews: PreviewProvider {
     static var previews: some View {

@@ -43,10 +43,10 @@ class TranslationViewModel: ObservableObject {
         self.translationService = translationService
     }
     
-    func stopTranslation() {
+    func stopTranslation()async {
             currentTask?.cancel()
             currentTask = nil
-            translationService.cancelTranslation()
+           await translationService.cancelTranslation()
             
             Task { @MainActor in
                 isTranslating = false
@@ -54,7 +54,7 @@ class TranslationViewModel: ObservableObject {
         }
 
     @MainActor
-    func translate(text: String) {
+    func translate(text: String)async {
         guard !text.isEmpty else {
             translatedText = ""
             return
@@ -62,7 +62,7 @@ class TranslationViewModel: ObservableObject {
         
         // Only stop ongoing translation if the new text is different
         if isTranslating && originalText != text {
-            stopTranslation()
+            await stopTranslation()
         } else if isTranslating && originalText == text {
             // Continue with current translation
             return
