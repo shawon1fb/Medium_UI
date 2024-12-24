@@ -311,13 +311,11 @@ struct TranslationView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, minHeight: 100)
                 } else {
-                    
                     Text(text)
                         .font(.system(size: 18))
                         .foregroundColor(DesignSystem.Colors.textPrimary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(maxLines)
-                       
                 }
             }
         }
@@ -325,59 +323,76 @@ struct TranslationView: View {
 
 
     // MARK: - Body
-    var body: some View {
-        ScrollView {
-            VStack(spacing: DesignSystem.Spacing.xl) {
-                makeLanguageSelector()
-                    .onChange(of: viewModel.selectedLanguage) { _ , _ in
-                        handleTranslationStart()
-                    }
-                
-                makeMetricsView()
-                
-                makeTranslationCard(
-                    title: "Original Text",
-                    text: viewModel.originalText,
-                    isEmpty: viewModel.originalText.isEmpty,
-                    copyState: .original,
-                    maxLines: 8
-                )
-                
-                makeTranslationCard(
-                    title: "Translated Text",
-                    text: viewModel.translatedText,
-                    isEmpty: viewModel.translatedText.isEmpty,
-                    copyState: .translated
-                )
-                
-                if viewModel.isTranslating {
-                    AnimatedButton(
-                        title: "Stop Translation",
-                        icon: "stop.fill",
-                        gradient: DesignSystem.Colors.secondaryGradient
-                    ) {
-                        handleTranslationStop()
-                    }
-                } else {
-                    AnimatedButton(
-                        title: "Regenerate Translation",
-                        icon: "arrow.clockwise",
-                        gradient: DesignSystem.Colors.primaryGradient
-                    ) {
-                        handleTranslationStart()
-                    }
-                }
-            }
-            .padding(.vertical, DesignSystem.Spacing.xl)
-        }
-        .background(DesignSystem.Colors.surfaceBackground)
-        .task {
-            handleTranslationStart()
-        }
-        .onDisappear {
-            handleCleanup()
-        }
-    }
+    // MARK: - Body
+       var body: some View {
+           ScrollViewReader { proxy in
+               ScrollView {
+                   VStack(spacing: DesignSystem.Spacing.xl) {
+                       makeLanguageSelector()
+                           .onChange(of: viewModel.selectedLanguage) { _ , _ in
+                               handleTranslationStart()
+                           }
+                       
+                       makeMetricsView()
+                       
+                       VStack{
+                           makeTranslationCard(
+                               title: "Original Text",
+                               text: viewModel.originalText,
+                               isEmpty: viewModel.originalText.isEmpty,
+                               copyState: .original,
+                               maxLines: 8
+                           )
+                           
+                           makeTranslationCard(
+                               title: "Translated Text",
+                               text: viewModel.translatedText,
+                               isEmpty: viewModel.translatedText.isEmpty,
+                               copyState: .translated
+                           )
+                       }
+                       .padding(.horizontal, DesignSystem.Spacing.lg)
+                       
+                       VStack{
+                           if viewModel.isTranslating {
+                               AnimatedButton(
+                                   title: "Stop Translation",
+                                   icon: "stop.fill",
+                                   gradient: DesignSystem.Colors.secondaryGradient
+                               ) {
+                                   handleTranslationStop()
+                               }
+                              
+                           } else {
+                               AnimatedButton(
+                                   title: "Regenerate Translation",
+                                   icon: "arrow.clockwise",
+                                   gradient: DesignSystem.Colors.primaryGradient
+                               ) {
+                                   handleTranslationStart()
+                               }
+                           }
+                       }
+                       .id("bottomId")
+                       .onChange(of: viewModel.translatedText) { _, _ in
+                           withAnimation {
+                               proxy.scrollTo("bottomId", anchor: .bottom)
+                           }
+                       }
+                       
+                   }
+                   .padding(.vertical, DesignSystem.Spacing.xl)
+               }
+               .background(DesignSystem.Colors.surfaceBackground)
+           }
+           .task {
+               handleTranslationStart()
+           }
+           .onDisappear {
+               handleCleanup()
+           }
+       }
+       
     
     // MARK: - Action Handlers
     private func handleTranslationStart() {
