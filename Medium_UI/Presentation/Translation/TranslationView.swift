@@ -200,66 +200,6 @@ struct TranslationView: View {
     }
     
     @ViewBuilder
-    private func makeLanguageSelector() -> some View {
-        VStack(spacing: DesignSystem.Spacing.sm) {
-            HStack {
-                Text("Translation Language")
-                    .font(.headline)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                
-                Spacer()
-                
-                Text(viewModel.selectedLanguage.rawValue)
-                    .font(.subheadline)
-                    .foregroundColor(DesignSystem.Colors.textSecondary)
-            }
-            
-            Menu {
-                ForEach(Language.allCases, id: \.self) { language in
-                    Button(action: { viewModel.selectedLanguage = language }) {
-                        HStack {
-                            Image(systemName: languageIcon(for: language))
-                            Text(language.rawValue)
-                            if viewModel.selectedLanguage == language {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                }
-            } label: {
-                HStack {
-                    Image(systemName: languageIcon(for: viewModel.selectedLanguage))
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
-                    Text(viewModel.selectedLanguage.rawValue)
-                        .font(.system(.body, design: .rounded))
-                    Spacer()
-                    Image(systemName: "chevron.down")
-                        .font(.caption)
-                }
-                .padding(DesignSystem.Spacing.md)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.systemBackground)
-                        .shadow(color: Color.black.opacity(0.05), radius: 4)
-                )
-            }
-            .accessibilityLabel("Select translation language")
-        }
-        .padding(.horizontal, DesignSystem.Spacing.lg)
-    }
-    
-    private func languageIcon(for language: Language) -> String {
-        switch language {
-        case .english:
-            return "character.book.closed.fill"
-        case .bangla:
-            return "globe.asia.australia.fill"
-        }
-    }
-    
-    
-    
-    @ViewBuilder
     private func makeMetricsView() -> some View {
         HStack(spacing: DesignSystem.Spacing.lg) {
             // Token Count
@@ -328,7 +268,7 @@ struct TranslationView: View {
            ScrollViewReader { proxy in
                ScrollView {
                    VStack(spacing: DesignSystem.Spacing.xl) {
-                       makeLanguageSelector()
+                       LanguageSelectorView(selectedLanguage: $viewModel.selectedLanguage)
                            .onChange(of: viewModel.selectedLanguage) { _ , _ in
                                handleTranslationStart()
                            }
