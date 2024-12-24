@@ -9,16 +9,16 @@ import SwiftUI
 // MARK: - Language Selector View
 struct LanguageSelectorView: View {
     @Binding var selectedLanguage: Language
-    
+    @Environment(\.theme) private var theme
     var body: some View {
         VStack(spacing: DesignSystem.Spacing.sm) {
             HStack(spacing: DesignSystem.Spacing.xs) {
                 Image(systemName: "globe")
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundColor(theme.textPrimary)
                 
                 Text("Select Language")
                     .font(.headline)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundColor(theme.textPrimary)
                 
                 Spacer()
             }
@@ -33,7 +33,7 @@ struct LanguageSelectorView: View {
                         HStack {
                             Text(language.description)
                                 .font(.title2)
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                                .foregroundColor(theme.textPrimary)
                             Spacer()
                             if selectedLanguage == language {
                                 Image(systemName: "checkmark")
@@ -49,20 +49,20 @@ struct LanguageSelectorView: View {
                     HStack(spacing: DesignSystem.Spacing.sm) {
                         Text(selectedLanguage.flag)
                             .font(.title2)
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                            .foregroundColor(theme.textPrimary)
                         Text(selectedLanguage.rawValue)
                             .font(.body.weight(.medium))
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                            .foregroundColor(theme.textPrimary)
                     }
                     Spacer()
                     Image(systemName: "chevron.down")
                         .font(.subheadline)
-                        .foregroundColor(DesignSystem.Colors.textSecondary)
+                        .foregroundColor(theme.textSecondary)
                 }
                 .padding(DesignSystem.Spacing.md)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(DesignSystem.Colors.cardBackground)
+                        .fill(theme.cardBackground)
                         .shadow(color: Color.black.opacity(0.05), radius: 4)
                 )
             }

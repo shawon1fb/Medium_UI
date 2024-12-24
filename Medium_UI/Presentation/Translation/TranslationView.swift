@@ -7,50 +7,10 @@ import AppKit
 
 
 
-// MARK: - Design System
-enum DesignSystem {
-    enum Colors {
-        static let primaryGradient = LinearGradient(
-            colors: [Color(hex: "6366F1"), Color(hex: "4F46E5")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        static let secondaryGradient = LinearGradient(
-            colors: [Color(hex: "EC4899"), Color(hex: "BE185D")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        static let surfaceBackground = Color(hex: "F8FAFC")
-        static let cardBackground = Color.white
-        static let textPrimary = Color(hex: "1E293B")
-        static let textSecondary = Color(hex: "64748B")
-    }
-    
-    enum Spacing {
-        static let xxs: CGFloat = 4
-        static let xs: CGFloat = 8
-        static let sm: CGFloat = 12
-        static let md: CGFloat = 16
-        static let lg: CGFloat = 24
-        static let xl: CGFloat = 32
-        static let xxl: CGFloat = 40
-    }
-    
-    struct Shadows {
-        static func card() -> some View {
-            return Color.black.opacity(0.05)
-                .shadow(radius: 15, x: 0, y: 5)
-        }
-        
-        static func button() -> some View {
-            return Color.black.opacity(0.1)
-                .shadow(radius: 10, x: 0, y: 4)
-        }
-    }
-}
 
 // MARK: - Custom Views
 struct GlassCard<Content: View>: View {
+    @Environment(\.theme) private var theme
     let content: Content
     
     init(@ViewBuilder content: () -> Content) {
@@ -61,7 +21,7 @@ struct GlassCard<Content: View>: View {
         content
             .padding(DesignSystem.Spacing.lg)
             .background(
-                DesignSystem.Colors.cardBackground
+                theme.cardBackground
                     .opacity(0.98)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
@@ -74,6 +34,7 @@ struct GlassCard<Content: View>: View {
 }
 
 struct AnimatedButton: View {
+    @Environment(\.theme) private var theme
     let title: String
     let icon: String
     let gradient: LinearGradient
@@ -109,9 +70,9 @@ struct AnimatedButton: View {
         .buttonStyle(.plain)
     }
 }
-
 // MARK: - Main View
 struct TranslationView: View {
+    @StateObject private var themeManager = ThemeManager.shared
     @StateObject private var viewModel: TranslationViewModel
     let text: String
     
@@ -253,7 +214,7 @@ struct TranslationView: View {
                 } else {
                     Text(text)
                         .font(.system(size: 18))
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .foregroundColor(themeManager.currentTheme.textPrimary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(maxLines)
                 }
@@ -268,27 +229,32 @@ struct TranslationView: View {
            ScrollViewReader { proxy in
                ScrollView {
                    VStack(spacing: DesignSystem.Spacing.xl) {
-                       LanguageSelectorView(selectedLanguage: $viewModel.selectedLanguage)
-                           .onChange(of: viewModel.selectedLanguage) { _ , _ in
-                               handleTranslationStart()
-                           }
+                       HStack{
+                           LanguageSelectorView(selectedLanguage: $viewModel.selectedLanguage)
+                               .onChange(of: viewModel.selectedLanguage) { _ , _ in
+                                   handleTranslationStart()
+                               }
+                           Spacer()
+                           ThemeToggleButton()
+                       }
+                       .padding(.horizontal, DesignSystem.Spacing.lg)
                        
                        makeMetricsView()
                        
                        VStack{
                            makeTranslationCard(
-                               title: "Original Text",
-                               text: viewModel.originalText,
-                               isEmpty: viewModel.originalText.isEmpty,
-                               copyState: .original,
-                               maxLines: 8
+                            title: "Original Text",
+                            text: viewModel.originalText,
+                            isEmpty: viewModel.originalText.isEmpty,
+                            copyState: .original,
+                            maxLines: 8
                            )
                            
                            makeTranslationCard(
-                               title: "Translated Text",
-                               text: viewModel.translatedText,
-                               isEmpty: viewModel.translatedText.isEmpty,
-                               copyState: .translated
+                            title: "Translated Text",
+                            text: viewModel.translatedText,
+                            isEmpty: viewModel.translatedText.isEmpty,
+                            copyState: .translated
                            )
                        }
                        .padding(.horizontal, DesignSystem.Spacing.lg)
@@ -296,18 +262,18 @@ struct TranslationView: View {
                        VStack{
                            if viewModel.isTranslating {
                                AnimatedButton(
-                                   title: "Stop Translation",
-                                   icon: "stop.fill",
-                                   gradient: DesignSystem.Colors.secondaryGradient
+                                title: "Stop Translation",
+                                icon: "stop.fill",
+                                gradient: DesignSystem.Colors.secondaryGradient
                                ) {
                                    handleTranslationStop()
                                }
-                              
+                               
                            } else {
                                AnimatedButton(
-                                   title: "Regenerate Translation",
-                                   icon: "arrow.clockwise",
-                                   gradient: DesignSystem.Colors.primaryGradient
+                                title: "Regenerate Translation",
+                                icon: "arrow.clockwise",
+                                gradient: DesignSystem.Colors.primaryGradient
                                ) {
                                    handleTranslationStart()
                                }
@@ -323,7 +289,8 @@ struct TranslationView: View {
                    }
                    .padding(.vertical, DesignSystem.Spacing.xl)
                }
-               .background(DesignSystem.Colors.surfaceBackground)
+               .background(themeManager.currentTheme.surfaceBackground)
+               .environment(\.theme, themeManager.currentTheme)
            }
            .task {
                handleTranslationStart()
@@ -373,21 +340,21 @@ struct MetricCard: View {
     let icon: String
     let state: TranslationView.CopyState
     let copyAction: (String, TranslationView.CopyState) -> Void
-    
+    @Environment(\.theme) private var theme
     var body: some View {
         GlassCard {
             VStack(spacing: DesignSystem.Spacing.xs) {
                 HStack {
                     Image(systemName: icon)
-                        .foregroundColor(DesignSystem.Colors.textSecondary)
+                        .foregroundColor(theme.textSecondary)
                     Text(title)
                         .font(.subheadline)
-                        .foregroundColor(DesignSystem.Colors.textSecondary)
+                        .foregroundColor(theme.textSecondary)
                 }
                 
                 Text(value)
                     .font(.title2.bold())
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundColor(theme.textPrimary)
             }
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
@@ -403,7 +370,7 @@ struct CopyButton: View {
     let state: TranslationView.CopyState
     let isCopied: Bool
     let copyAction: (String, TranslationView.CopyState) -> Void
-    
+    @Environment(\.theme) private var theme
     var body: some View {
         Button(action: {
             copyAction(text, state)
@@ -413,12 +380,13 @@ struct CopyButton: View {
                 Text(isCopied ? "Copied!" : "Copy  ")
             }
             .font(.subheadline.weight(.medium))
-            .foregroundColor(isCopied ? .green : DesignSystem.Colors.textSecondary)
+            .foregroundColor(isCopied ? .green : theme.textSecondary)
             .padding(.horizontal, DesignSystem.Spacing.sm)
             .padding(.vertical, DesignSystem.Spacing.xs)
             .background(Color.secondary.opacity(0.1))
             .clipShape(Capsule())
         }
+        .buttonStyle(.plain)
     }
 }
 
