@@ -16,12 +16,17 @@ actor OllamaTranslationRepository: TranslationService {
     private let requestDelay: TimeInterval = 0.1
     
     private lazy var urlSession: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 15
-        config.timeoutIntervalForResource = 60
-        config.httpMaximumConnectionsPerHost = concurrentRequestLimit
+        let config = URLSessionConfiguration.ephemeral
+        config.timeoutIntervalForRequest = 30
+        config.timeoutIntervalForResource = 300
+        config.httpMaximumConnectionsPerHost = 1
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
-        return URLSession(configuration: config)
+        config.networkServiceType = .responsiveData
+        config.shouldUseExtendedBackgroundIdleMode = true
+        config.waitsForConnectivity = true
+        return URLSession(configuration: config,
+                         delegate: nil,
+                         delegateQueue: .main)
     }()
     
     private var activeTranslationId: UUID?
