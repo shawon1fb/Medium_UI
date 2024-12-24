@@ -153,9 +153,11 @@ struct ThemeToggleButton: View {
             }
         }) {
             ZStack {
-                themeManager.currentTheme.secondaryGradient
+                Color(hex: "4DA1A9")
                     .opacity(0.9)
                     .blur(radius: 0.5)
+                    .frame(width: 36, height: 36)
+                    .clipShape(Circle())
                 
                 Circle()
                     .fill(Color.white.opacity(0.1))
@@ -171,11 +173,13 @@ struct ThemeToggleButton: View {
                                      value: iconRotation)
                     }
             }
-            .frame(width: 44, height: 44)
+           
+            .frame(width: 50, height: 50)
             .clipShape(Circle())
             .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
             .scaleEffect(isAnimating ? 0.95 : 1)
         }
+        .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityAddTraits(.isButton)
         .accessibilityHint("Double tap to toggle theme")

@@ -229,7 +229,7 @@ struct TranslationView: View {
            ScrollViewReader { proxy in
                ScrollView {
                    VStack(spacing: DesignSystem.Spacing.xl) {
-                       HStack{
+                       HStack(alignment: .bottom){
                            LanguageSelectorView(selectedLanguage: $viewModel.selectedLanguage)
                                .onChange(of: viewModel.selectedLanguage) { _ , _ in
                                    handleTranslationStart()
