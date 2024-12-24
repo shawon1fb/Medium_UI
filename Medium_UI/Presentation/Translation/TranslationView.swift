@@ -199,35 +199,51 @@ struct TranslationView: View {
         }
     }
     
-    // MARK: - Subviews
     @ViewBuilder
     private func makeLanguageSelector() -> some View {
         VStack(spacing: DesignSystem.Spacing.sm) {
-            Text("Translation Language")
-                .font(.headline)
-                .foregroundColor(DesignSystem.Colors.textPrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Picker("Language", selection: $viewModel.selectedLanguage) {
-                ForEach(Language.allCases, id: \.self) { language in
-                    HStack(spacing: DesignSystem.Spacing.xs) {
-                        Image(systemName: languageIcon(for: language))
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                        Text(language.rawValue)
-                            .font(.system(.body, design: .rounded))
-                            .fontWeight(.medium)
-                    }
-                    .tag(language)
-                }
+            HStack {
+                Text("Translation Language")
+                    .font(.headline)
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                
+                Spacer()
+                
+                Text(viewModel.selectedLanguage.rawValue)
+                    .font(.subheadline)
+                    .foregroundColor(DesignSystem.Colors.textSecondary)
             }
-            .pickerStyle(SegmentedPickerStyle())
-          
-            .padding(DesignSystem.Spacing.xs)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(nsColor: .windowBackgroundColor))
-                    .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
-            )
+            
+            Menu {
+                ForEach(Language.allCases, id: \.self) { language in
+                    Button(action: { viewModel.selectedLanguage = language }) {
+                        HStack {
+                            Image(systemName: languageIcon(for: language))
+                            Text(language.rawValue)
+                            if viewModel.selectedLanguage == language {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Image(systemName: languageIcon(for: viewModel.selectedLanguage))
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                    Text(viewModel.selectedLanguage.rawValue)
+                        .font(.system(.body, design: .rounded))
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                }
+                .padding(DesignSystem.Spacing.md)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.systemBackground)
+                        .shadow(color: Color.black.opacity(0.05), radius: 4)
+                )
+            }
+            .accessibilityLabel("Select translation language")
         }
         .padding(.horizontal, DesignSystem.Spacing.lg)
     }
@@ -272,14 +288,14 @@ struct TranslationView: View {
         title: String,
         text: String,
         isEmpty: Bool,
-        copyState: CopyState
+        copyState: CopyState,
+        maxLines: Int? = nil
     ) -> some View {
         GlassCard {
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                 HStack {
                     Text(title)
                         .font(.headline)
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
                     
                     Spacer()
                     
@@ -295,33 +311,37 @@ struct TranslationView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, minHeight: 100)
                 } else {
+                    
                     Text(text)
-                        .font(.body)
+                        .font(.system(size: 18))
                         .foregroundColor(DesignSystem.Colors.textPrimary)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .lineLimit(maxLines)
+                       
                 }
             }
         }
-        .padding(.horizontal, DesignSystem.Spacing.lg)
     }
-    
+
+
     // MARK: - Body
     var body: some View {
         ScrollView {
             VStack(spacing: DesignSystem.Spacing.xl) {
                 makeLanguageSelector()
-                    .onChange(of: viewModel.selectedLanguage) { _ in
+                    .onChange(of: viewModel.selectedLanguage) { _ , _ in
                         handleTranslationStart()
                     }
                 
                 makeMetricsView()
                 
-//                makeTranslationCard(
-//                    title: "Original Text",
-//                    text: viewModel.originalText,
-//                    isEmpty: viewModel.originalText.isEmpty,
-//                    copyState: .original
-//                )
+                makeTranslationCard(
+                    title: "Original Text",
+                    text: viewModel.originalText,
+                    isEmpty: viewModel.originalText.isEmpty,
+                    copyState: .original,
+                    maxLines: 8
+                )
                 
                 makeTranslationCard(
                     title: "Translated Text",
@@ -491,6 +511,16 @@ extension Color {
     }
 }
 
+extension View {
+    @ViewBuilder
+    func `if`<Transform: View>(_ condition: Bool, transform: (Self) -> Transform) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
 // MARK: - Preview
 struct TranslationView_Previews: PreviewProvider {
     static var previews: some View {
