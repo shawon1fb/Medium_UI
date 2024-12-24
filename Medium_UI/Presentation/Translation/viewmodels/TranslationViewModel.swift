@@ -19,7 +19,8 @@ final class TranslationViewModelBindings{
             return viewModel
         }
         
-        let ollamaService = OllamaTranslationRepository()
+//        let ollamaService = OllamaTranslationRepository()
+        let ollamaService = MockTranslationService()
         let viewModel = TranslationViewModel(
             translationService: ollamaService
         )
@@ -29,9 +30,9 @@ final class TranslationViewModelBindings{
     }
 }
 
-
 class TranslationViewModel: ObservableObject {
     private let translationService: TranslationService
+    private var currentTask: Task<Void, Never>?
     
     @Published var originalText: String = ""
     @Published var translatedText: String = ""
@@ -42,22 +43,37 @@ class TranslationViewModel: ObservableObject {
         self.translationService = translationService
     }
     
-    @MainActor
     func stopTranslation() {
-        translationService.cancelTranslation()
-        isTranslating = false
-    }
+            currentTask?.cancel()
+            currentTask = nil
+            translationService.cancelTranslation()
+            
+            Task { @MainActor in
+                isTranslating = false
+            }
+        }
 
     @MainActor
     func translate(text: String) {
-        guard text.isEmpty == false else { return }
+        guard !text.isEmpty else {
+            translatedText = ""
+            return
+        }
         
-        guard isTranslating != true && originalText != text else { return }
+        // Only stop ongoing translation if the new text is different
+        if isTranslating && originalText != text {
+            stopTranslation()
+        } else if isTranslating && originalText == text {
+            // Continue with current translation
+            return
+        }
         
-        Task {
+        // Create and store new translation task
+        currentTask = Task {
             isTranslating = true
             translatedText = ""
             originalText = text
+            
             do {
                 let stream = try await translationService.translate(
                     text: text,
@@ -69,15 +85,17 @@ class TranslationViewModel: ObservableObject {
                     if Task.isCancelled {
                         break
                     }
-                    print("Translation: \(translation)")
                     translatedText += translation
                 }
             } catch {
                 // Handle error appropriately
                 print("Translation error: \(error)")
+                // Optionally set an error state here
             }
             
-            isTranslating = false
+            if !Task.isCancelled {
+                isTranslating = false
+            }
         }
     }
 }

@@ -88,6 +88,7 @@ struct TranslationView: View {
                 }
             }
             
+            Text("is translating \(viewModel.isTranslating ? "true" : "false")")
             // Control Buttons
             if viewModel.isTranslating {
                 Button(action: {
