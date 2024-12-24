@@ -135,17 +135,37 @@ struct TranslationView: View {
     
     // MARK: - Timer Management
     private func startTimer() {
+        translationStartTime = Date()
+        translationDuration = 0
+        
+        // Invalidate any existing timer first
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+        
+        // Create a new timer that fires every 0.1 seconds
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             if let startTime = translationStartTime {
-                translationDuration = Date().timeIntervalSince(startTime)
+                // Update the duration on the main thread to ensure UI updates
+                DispatchQueue.main.async {
+                    
+                    translationDuration = Date().timeIntervalSince(startTime)
+                    
+                    print("translationDuration \(translationDuration)")
+                }
             }
         }
+        
+        // Make sure the timer runs even when scrolling
+        RunLoop.current.add(timer!, forMode: .common)
     }
     
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
+        // Keep the final duration
+        if let startTime = translationStartTime {
+            translationDuration = Date().timeIntervalSince(startTime)
+        }
+        translationStartTime = nil
     }
     
     // MARK: - Helper Functions
@@ -217,7 +237,7 @@ struct TranslationView: View {
         case .english:
             return "character.book.closed.fill"
         case .bangla:
-            return "character.book.closed.fill.bn"
+            return "globe.asia.australia.fill"
         }
     }
     
@@ -296,12 +316,12 @@ struct TranslationView: View {
                 
                 makeMetricsView()
                 
-                makeTranslationCard(
-                    title: "Original Text",
-                    text: viewModel.originalText,
-                    isEmpty: viewModel.originalText.isEmpty,
-                    copyState: .original
-                )
+//                makeTranslationCard(
+//                    title: "Original Text",
+//                    text: viewModel.originalText,
+//                    isEmpty: viewModel.originalText.isEmpty,
+//                    copyState: .original
+//                )
                 
                 makeTranslationCard(
                     title: "Translated Text",
