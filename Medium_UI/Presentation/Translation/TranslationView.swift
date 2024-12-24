@@ -117,6 +117,7 @@ struct TranslationView: View {
                             .stroke(Color.white.opacity(0.2), lineWidth: 1)
                     )
                 }
+                .buttonStyle(.plain)
                 .scaleEffect(1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0), value: viewModel.isTranslating)
             } else {
@@ -146,9 +147,13 @@ struct TranslationView: View {
                             .stroke(Color.white.opacity(0.2), lineWidth: 1)
                     )
                 }
+                .buttonStyle(.plain)
                 .scaleEffect(1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0), value: !viewModel.isTranslating)
             }
+            
+            
+          
         }
         .padding(.vertical)
         .onAppear {

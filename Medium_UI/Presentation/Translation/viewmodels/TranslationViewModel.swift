@@ -19,8 +19,8 @@ final class TranslationViewModelBindings{
             return viewModel
         }
         
-//        let ollamaService = OllamaTranslationRepository()
-        let ollamaService = MockTranslationService()
+        let ollamaService = OllamaTranslationRepository()
+//        let ollamaService = MockTranslationService()
         let viewModel = TranslationViewModel(
             translationService: ollamaService
         )
