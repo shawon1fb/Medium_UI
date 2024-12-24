@@ -1,9 +1,3 @@
-//
-//  OllamaTranslationRepository.swift
-//  Medium_UI
-//
-//  Created by Shahanul Haque on 12/21/24.
-//
 import Foundation
 
 struct OllamaRestResponse: Codable {
@@ -18,7 +12,6 @@ actor OllamaTranslationRepository: TranslationService {
     
     // Configuration
     private let maxChunkSize = 2000
-    private let maxConcurrentRequests = 2
     private let requestDelay: TimeInterval = 0.3
     
     // Optimized URLSession configuration
@@ -26,35 +19,37 @@ actor OllamaTranslationRepository: TranslationService {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 300
-        config.httpMaximumConnectionsPerHost = 2
+        config.httpMaximumConnectionsPerHost = 1
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         return URLSession(configuration: config)
     }()
     
-    // Active translations tracking
-    private var activeTranslations: Set<UUID> = []
+    // Active translation tracking
+    private var activeTranslationId: UUID?
     
-    nonisolated func cancelTranslation() {
-        Task { await _cancelTranslation() }
+     func cancelTranslation()async {
+         _cancelTranslation()
     }
     
     private func _cancelTranslation() {
         currentTask?.cancel()
         currentTask = nil
-        activeTranslations.removeAll()
+        activeTranslationId = nil
     }
     
-    private func trackTranslation(_ id: UUID) -> Bool {
-        guard !activeTranslations.contains(id) else { return false }
-        activeTranslations.insert(id)
+    private func canStartTranslation(_ id: UUID) -> Bool {
+        guard activeTranslationId == nil else { return false }
+        activeTranslationId = id
         return true
     }
     
-    private func untrackTranslation(_ id: UUID) {
-        activeTranslations.remove(id)
+    private func endTranslation(_ id: UUID) {
+        if activeTranslationId == id {
+            activeTranslationId = nil
+        }
     }
     
-    private nonisolated func splitTextIntoSentences(_ text: String) -> [String] {
+    private  func splitTextIntoSentences(_ text: String) -> [String] {
         let terminators = [".", "!", "?", "。", "！", "？"]
         let paragraphs = text.components(separatedBy: "\n")
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -148,63 +143,41 @@ actor OllamaTranslationRepository: TranslationService {
         return response.response
     }
     
-    nonisolated func translate(text: String, from: Language, to: Language) async throws -> AsyncStream<String> {
+     func translate(text: String, from: Language, to: Language) async throws -> AsyncStream<String> {
         let translationId = UUID()
         
         return AsyncStream { continuation in
             Task {
                 // Check if we can start this translation
-                guard await trackTranslation(translationId) else {
+                guard  canStartTranslation(translationId) else {
                     continuation.finish()
                     return
                 }
                 
                 defer {
-                    Task {
-                        await untrackTranslation(translationId)
-                    }
+                    endTranslation(translationId)
                 }
                 
                 do {
                     let sentences = splitTextIntoSentences(text)
                     var isFirstChunk = true
                     
-                    // Process chunks in batches
-                    for chunk in stride(from: 0, to: sentences.count, by: maxConcurrentRequests) {
+                    // Process sentences sequentially
+                    for (_, sentence) in sentences.enumerated() {
                         if Task.isCancelled { break }
                         
-                        let endIndex = min(chunk + maxConcurrentRequests, sentences.count)
-                        let batch = sentences[chunk..<endIndex]
+                        // Translate each chunk
+                        let translation = try await translateChunk(
+                            text: sentence,
+                            from: from,
+                            to: to
+                        )
                         
-                        // Process batch concurrently
-                        try await withThrowingTaskGroup(of: (Int, String).self) { group in
-                            for (index, sentence) in batch.enumerated() {
-                                group.addTask {
-                                    let translation = try await self.translateChunk(
-                                        text: sentence,
-                                        from: from,
-                                        to: to
-                                    )
-                                    return (chunk + index, translation)
-                                }
-                            }
-                            
-                            // Collect and yield results in order
-                            var batchResults: [(Int, String)] = []
-                            for try await result in group {
-                                batchResults.append(result)
-                            }
-                            
-                            for (_, translation) in batchResults.sorted(by: { $0.0 < $1.0 }) {
-                                if Task.isCancelled { break }
-                                
-                                if !isFirstChunk {
-                                    continuation.yield(" ")
-                                }
-                                isFirstChunk = false
-                                continuation.yield(translation)
-                            }
+                        if !isFirstChunk {
+                            continuation.yield(" ")
                         }
+                        isFirstChunk = false
+                        continuation.yield(translation)
                     }
                 } catch {
                     print("Translation error: \(error)")
