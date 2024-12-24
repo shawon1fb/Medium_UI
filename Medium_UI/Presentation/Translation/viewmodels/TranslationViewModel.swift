@@ -7,8 +7,29 @@
 
 import SwiftUI
 import Combine
-// ViewModel (Single Responsibility Principle)
-@MainActor
+import EasyX
+import XSwiftUI
+
+final class TranslationViewModelBindings{
+    
+    
+    func getDependencies() -> TranslationViewModel{
+        
+        if let viewModel = try? DIContainer.shared.resolve(TranslationViewModel.self){
+            return viewModel
+        }
+        
+        let ollamaService = OllamaTranslationRepository()
+        let viewModel = TranslationViewModel(
+            translationService: ollamaService
+        )
+         DIContainer.shared.register(TranslationViewModel.self, factory: { _ in viewModel})
+        return viewModel
+        
+    }
+}
+
+
 class TranslationViewModel: ObservableObject {
     private let translationService: TranslationService
     
@@ -21,18 +42,22 @@ class TranslationViewModel: ObservableObject {
         self.translationService = translationService
     }
     
+    @MainActor
     func stopTranslation() {
         translationService.cancelTranslation()
         isTranslating = false
     }
-    
+
+    @MainActor
     func translate(text: String) {
-        guard !text.isEmpty else { return }
+        guard text.isEmpty == false else { return }
+        
+        guard isTranslating != true && originalText != text else { return }
         
         Task {
             isTranslating = true
             translatedText = ""
-            
+            originalText = text
             do {
                 let stream = try await translationService.translate(
                     text: text,

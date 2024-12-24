@@ -14,11 +14,11 @@ struct TranslationView: View {
     
     init(text: String) {
         self._viewModel = StateObject(
-            wrappedValue: TranslationViewModel(
-                translationService: OllamaTranslationRepository()
-            )
+            wrappedValue: TranslationViewModelBindings().getDependencies()
         )
         self.text = text
+        
+        TranslationViewModelBindings().getDependencies().translate(text: text)
     }
     
     var body: some View {
@@ -38,6 +38,31 @@ struct TranslationView: View {
             
             ScrollView {
                 VStack {
+                    
+                    
+                    // Translated text card
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Original Text")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Group {
+                            if viewModel.originalText.isEmpty {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity, minHeight: 100)
+                            } else {
+                                Text(viewModel.originalText)
+                                    .font(.body)
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.background)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+                    }
+                    .padding(.horizontal)
+                    
                     // Translated text card
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Translated Text")

@@ -46,11 +46,11 @@ struct ContentView3: View {
 struct TranslationDetailsView:View {
     let post: PostSingleItem
       
-      @StateObject var postDetailsVM: PostDetailsViewModel
+    @ObservedObject var postDetailsVM: PostDetailsViewModel
       
       init(post: PostSingleItem) {
           self.post = post
-          _postDetailsVM = StateObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
+          _postDetailsVM = ObservedObject(wrappedValue: PostDetailsViewModelBindings().getDependencies(post: post))
       }
       
     var body: some View {
