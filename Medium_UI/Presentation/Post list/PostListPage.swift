@@ -32,6 +32,9 @@ struct ContentView3: View {
         }
         .navigationSplitViewStyle(.prominentDetail)
         .navigationTitle("Medium")
+        .toolbar(content: {
+            ThemeToggleButton()
+        })
         .task {
             await viewModel.fetchPosts()
         }
