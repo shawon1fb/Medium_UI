@@ -114,6 +114,10 @@ class MediumPostParseContent {
    
     static func parseMarkups(text: String, markups: [Markup], isHighlighted: Bool) -> AttributedString {
         var attributedString = AttributedString(text)
+        let defaultFontSize: CGFloat =  FontType.systemFontSize + 6 // Increased base font size
+        
+        // Set default font size for entire text
+        attributedString.font = .init(FontType.systemFont(ofSize: defaultFontSize))
         
         let sortedMarkups = markups.sorted { $0.start < $1.start }
         
@@ -130,12 +134,12 @@ class MediumPostParseContent {
             
             switch markup.type {
             case .strong:
-                attributedString[range].font = .init(FontType.boldSystemFont(ofSize: FontType.systemFontSize))
+                attributedString[range].font = .init(FontType.boldSystemFont(ofSize: defaultFontSize))
             case .em:
                 #if canImport(UIKit)
-                attributedString[range].font = .init(FontType.italicSystemFont(ofSize: FontType.systemFontSize))
+                attributedString[range].font = .init(FontType.italicSystemFont(ofSize: defaultFontSize))
                 #else
-                attributedString[range].font = .init(FontType.systemFont(ofSize: FontType.systemFontSize, weight: .regular))
+                attributedString[range].font = .init(FontType.systemFont(ofSize: defaultFontSize, weight: .regular))
                 #endif
             case .link:
                 if let href = markup.href, let url = URL(string: href) {
@@ -144,9 +148,9 @@ class MediumPostParseContent {
                 }
             case .code:
                 #if canImport(UIKit)
-                attributedString[range].font = .init(FontType.monospacedSystemFont(ofSize: FontType.systemFontSize, weight: .regular))
+                attributedString[range].font = .init(FontType.monospacedSystemFont(ofSize: defaultFontSize, weight: .regular))
                 #else
-                attributedString[range].font = .init(FontType.monospacedDigitSystemFont(ofSize: FontType.systemFontSize, weight: .regular))
+                attributedString[range].font = .init(FontType.monospacedDigitSystemFont(ofSize: defaultFontSize, weight: .regular))
                 #endif
                 attributedString[range].backgroundColor = Color.gray.opacity(0.2)
             case .strike:
@@ -155,9 +159,7 @@ class MediumPostParseContent {
         }
         
         if isHighlighted {
-            let startIndex = attributedString.startIndex
-            let endIndex = attributedString.endIndex
-            attributedString[startIndex..<endIndex].backgroundColor = Color.yellow.opacity(0.3)
+            attributedString[attributedString.startIndex..<attributedString.endIndex].backgroundColor = Color.yellow.opacity(0.3)
         }
         
         return attributedString

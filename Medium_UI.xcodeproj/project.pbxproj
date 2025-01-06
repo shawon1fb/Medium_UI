@@ -13,6 +13,7 @@
 		3B93060E2D131A8300F39D9F /* XSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3B93060D2D131A8300F39D9F /* XSwiftUI */; };
 		3B9306112D131B9700F39D9F /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3B9306102D131B9700F39D9F /* HighlightSwift */; };
 		3B9306142D131D4B00F39D9F /* MediumCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B9306132D131D4B00F39D9F /* MediumCore */; };
+		3BBB61A12D2C4FAD00F75090 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3BBB61A02D2C4FAD00F75090 /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				36C915662CEF9F01008861FD /* HighlightSwift in Frameworks */,
+				3BBB61A12D2C4FAD00F75090 /* MarkdownUI in Frameworks */,
 				3B9306112D131B9700F39D9F /* HighlightSwift in Frameworks */,
 				3B9306142D131D4B00F39D9F /* MediumCore in Frameworks */,
 				3613F6D32CEB8EB20034B5B2 /* MediumCore in Frameworks */,
@@ -133,6 +135,7 @@
 				3B93060D2D131A8300F39D9F /* XSwiftUI */,
 				3B9306102D131B9700F39D9F /* HighlightSwift */,
 				3B9306132D131D4B00F39D9F /* MediumCore */,
+				3BBB61A02D2C4FAD00F75090 /* MarkdownUI */,
 			);
 			productName = Medium_UI;
 			productReference = 3613F6992CEB8DA60034B5B2 /* Medium_UI.app */;
@@ -220,6 +223,7 @@
 				3B93060C2D131A8300F39D9F /* XCRemoteSwiftPackageReference "XSwiftUI" */,
 				3B93060F2D131B9700F39D9F /* XCRemoteSwiftPackageReference "HighlightSwift" */,
 				3B9306122D131D4B00F39D9F /* XCRemoteSwiftPackageReference "Swift-Medium-Core" */,
+				3BBB619F2D2C4FAD00F75090 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3613F69A2CEB8DA60034B5B2 /* Products */;
@@ -603,6 +607,14 @@
 				kind = branch;
 			};
 		};
+		3BBB619F2D2C4FAD00F75090 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -632,6 +644,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3B9306122D131D4B00F39D9F /* XCRemoteSwiftPackageReference "Swift-Medium-Core" */;
 			productName = MediumCore;
+		};
+		3BBB61A02D2C4FAD00F75090 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BBB619F2D2C4FAD00F75090 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
