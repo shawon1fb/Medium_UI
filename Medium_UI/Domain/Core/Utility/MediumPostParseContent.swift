@@ -22,7 +22,7 @@ import SwiftUI
 
 class MediumPostParseContent {
     
-    static func parseContent(_ content: Content, title:String, subtitle:String, previewImageId:String, tags: [PostTag],  highlights: [HighlightModel]) -> [ParsedParagraph] {
+    static func parseContent(_ content: ContentModel, title:String, subtitle:String, previewImageId:String, tags: [PostTag],  highlights: [HighlightModel]) -> [ParsedParagraph] {
       var processedParagraphs: [ParsedParagraph] = []
       var currentIndex = 0
 

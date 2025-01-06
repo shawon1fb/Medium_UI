@@ -58,7 +58,7 @@ class PostContentViewModel: ObservableObject {
         }
     }
     
-    private func parseContent(_ content: Content) {
+    private func parseContent(_ content: ContentModel) {
         var processedParagraphs: [ParsedParagraph] = []
         var currentIndex = 0
         

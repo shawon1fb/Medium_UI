@@ -47,7 +47,7 @@ struct Post: Codable {
   let highlights: [HighlightModel]
   let responsesLocked: Bool
   let tags: [Tag]
-  let content: Content
+  let content: ContentModel
 
   enum CodingKeys: String, CodingKey {
     case typename = "__typename"
@@ -63,7 +63,7 @@ struct Post: Codable {
 }
 
 // MARK: - Content
-struct Content: Codable {
+struct ContentModel: Codable {
   let bodyModel: BodyModel
   let validatedShareKey: String
 }
