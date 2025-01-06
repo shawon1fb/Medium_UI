@@ -15,7 +15,7 @@ import UIKit
 typealias FontType = UIFont
 #else
 import AppKit
-//typealias FontType = NSFont
+typealias FontType = NSFont
 #endif
 import SwiftUI
 

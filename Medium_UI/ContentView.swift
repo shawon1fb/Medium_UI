@@ -10,40 +10,35 @@ import EasyX
 import XSwiftUI
 
 struct ContentView: View {
-    @State var count: Int = 0
+    @StateObject private var viewModel = PostListViewModelBindings().getDependencies()
+    @State  var selectedPost: PostSingleItem?
+    @State var columnVisibility: NavigationSplitViewVisibility = .automatic
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-            Text("count -> \(count)")
-        }
-        .padding()
-        .background(Color.teal)
-        .onTapGesture {
-            Task{
-                if let rs =   try?  await MediumRepository().getPost(){
-                    count = rs.count
-                }
-                
-                
+        NavigationSplitView(columnVisibility: $columnVisibility) {
+            PostListView(posts: viewModel.posts, selectedPost: $selectedPost)
+        } content: {
+            if let post  = selectedPost{
+                PostDetailConatiner(post: post)
+            }else{
+                ContentUnavailableView("Select a Post",
+                    systemImage: "doc.text")
+            }
+        } detail: {
+            if let post = selectedPost {
+                TranslationDetailsView(post: post)
+            } else {
+                ContentUnavailableView("Select a Post to View Translation",
+                    systemImage: "doc.text.translation")
             }
         }
-    }
-}
-
-
-
-struct ContentView2: View {
-    
-    
-    var body: some View {
-        VStack{
-            PostContentView()
+        .navigationSplitViewStyle(.prominentDetail)
+        .navigationTitle("Medium")
+        .toolbar(content: {
+            ThemeToggleButton()
+        })
+        .task {
+            await viewModel.fetchPosts()
         }
-        .background(Color(hex: "#1F2A37"))
-        
     }
 }
 
