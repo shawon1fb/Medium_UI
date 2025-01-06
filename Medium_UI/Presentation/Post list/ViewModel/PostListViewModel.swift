@@ -30,9 +30,9 @@ final class PostListViewModelBindings{
 // ViewModel
 final class PostListViewModel: ObservableObject {
     @Published var posts: [PostSingleItem] = []
-    let repository: MediumRepository
+    let repository: MediumPostRepository
     
-    init( repository: MediumRepository = MediumRepository()) {
+    init( repository: MediumPostRepository = MediumPostRepositoryBindings().getDependencies()) {
         self.repository = repository
     }
     

@@ -237,48 +237,48 @@ struct MixtapeEmbedView: View {
 
 
 
-
-
-struct PostContentView: View {
-    @StateObject var viewModel : PostContentViewModel = PostContentViewModel()
-    
-  
-    
-    var body: some View {
-        VStack{
-            if let hasError = viewModel.hasError{
-                
-                VStack{
-                    Text(hasError)
-                        .font(.headline)
-                        .foregroundColor(.red)
-                }
-            }else{
-          
-                Text(viewModel.title)
-                    .font(.title)
-                    .padding()
-                Text(viewModel.subtitle)
-                    .font(.subheadline)
-                    .padding()
-                
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(viewModel.paragraphs) { paragraph in
-                            ParagraphView(paragraph: paragraph)
-                        }
-                    }
-                    .padding()
-                }
-            }
-          
-        }
-//        .frame(maxWidth: 800)
-        .onAppear{
-            Task{
-               await viewModel.getPostContent()
-            }
-        }
-    }
-}
-
+//
+//
+//struct PostContentView: View {
+//    @StateObject var viewModel : PostContentViewModel = PostContentViewModel()
+//    
+//  
+//    
+//    var body: some View {
+//        VStack{
+//            if let hasError = viewModel.hasError{
+//                
+//                VStack{
+//                    Text(hasError)
+//                        .font(.headline)
+//                        .foregroundColor(.red)
+//                }
+//            }else{
+//          
+//                Text(viewModel.title)
+//                    .font(.title)
+//                    .padding()
+//                Text(viewModel.subtitle)
+//                    .font(.subheadline)
+//                    .padding()
+//                
+//                ScrollView {
+//                    VStack(alignment: .leading, spacing: 0) {
+//                        ForEach(viewModel.paragraphs) { paragraph in
+//                            ParagraphView(paragraph: paragraph)
+//                        }
+//                    }
+//                    .padding()
+//                }
+//            }
+//          
+//        }
+////        .frame(maxWidth: 800)
+//        .onAppear{
+//            Task{
+//               await viewModel.getPostContent()
+//            }
+//        }
+//    }
+//}
+//
