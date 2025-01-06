@@ -11,8 +11,8 @@ struct IframeView: View {
     let paragraph: Paragraph
     
     var body: some View {
-        if let iframeId = paragraph.iframe?.mediaResource.id {
-            SharedWebView(urlString: "https://medium.com/render_iframe/\(iframeId)")
+        if let src = paragraph.iframe?.mediaResource.iframeSrc {
+            SharedWebView(urlString: src)
                 .frame(height: 400)
                 .padding(.vertical, 8)
         }

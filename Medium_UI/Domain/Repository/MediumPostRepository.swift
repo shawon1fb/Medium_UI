@@ -62,7 +62,8 @@ actor MediumPostRepository: IMediumRepository {
   func getPostByID(postID: String) async throws -> Post {
       
       print("requesting postID  \(postID)")
-    let data = try await MediumApi(authCookies: "").queryPostById(postId: postID)
+//    let data = try await MediumApi(authCookies: "").queryPostById(postId: postID)
+    let data = try await MediumApi(authCookies: "").queryPostById(postId: "f29ea5c47516")
 
     do {
 

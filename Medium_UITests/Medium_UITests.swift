@@ -18,7 +18,7 @@ struct Medium_UITests {
         ]
         
         
-        let posts:[PostSingleItem] =  try await  MediumRepository().getMediumPosts(dto: MediumPostListDTO(variables: PostListVariables(paging: .init(to: nil, source: nil))))
+        let posts:[PostSingleItem] =  try await  MediumPostRepositoryBindings().getDependencies().getMediumPosts(dto: MediumPostListDTO(variables: PostListVariables(paging: .init(to: nil, source: nil))))
         
         print("posts count \(posts.count)")
     }
