@@ -11,9 +11,7 @@ import SwiftUI
 struct Medium_UIApp: App {
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-//
-            ContentView3()
+            ContentView()
         }
     }
 }
