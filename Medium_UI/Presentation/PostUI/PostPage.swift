@@ -159,7 +159,7 @@ struct PullQuoteView: View {
 
 struct MixtapeEmbedView: View {
     let paragraph: Paragraph
-    
+    @StateObject var theme = ThemeManager.shared
     var body: some View {
         if let metadata = paragraph.mixtapeMetadata,
            let url = URL(string: metadata.href) {
@@ -169,19 +169,23 @@ struct MixtapeEmbedView: View {
                         if let title = extractEmbedTitle() {
                             Text(title)
                                 .font(.headline)
-                                .foregroundColor(.primary)
+//                                .foregroundColor(.primary)
+                                .foregroundColor(theme.currentTheme.textPrimary)
                         }
                         
                         if let description = extractEmbedDescription() {
                             Text(description)
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+//                                .foregroundColor(.secondary)
+                                .foregroundColor(theme.currentTheme.textSecondary)
                         }
                         
                         if let site = extractEmbedSite(from: url) {
                             Text(site)
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+//                                .foregroundColor(.secondary)
+                                .foregroundColor(theme.currentTheme.textSecondary)
+                            
                         }
                     }
                     
@@ -207,7 +211,7 @@ struct MixtapeEmbedView: View {
                     }
                 }
                 .padding(16)
-                .background(Color(.systemGray))
+                .background(theme.currentTheme.cardBackground)
                 .cornerRadius(12)
             }
             .buttonStyle(PlainButtonStyle())

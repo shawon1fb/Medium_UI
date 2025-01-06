@@ -259,7 +259,7 @@ extension EnvironmentValues {
 // MARK: - Theme Toggle Button
 struct ThemeToggleButton: View {
     @StateObject private var themeManager = ThemeManager.shared
-//    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) var colorScheme
     @State private var isAnimating = false
     
     private var iconRotation: Double {
@@ -318,6 +318,7 @@ struct ThemeToggleButton: View {
         .accessibilityLabel(accessibilityLabel)
         .accessibilityAddTraits(.isButton)
         .accessibilityHint("Double tap to toggle theme")
+        .environment(\.colorScheme, themeManager.isDarkMode  == false ? .light : .dark)
     }
 }
 struct HapticManager {
