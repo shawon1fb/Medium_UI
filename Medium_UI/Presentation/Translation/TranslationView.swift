@@ -224,7 +224,6 @@ struct TranslationView: View {
 
 
     // MARK: - Body
-    // MARK: - Body
        var body: some View {
            ScrollViewReader { proxy in
                ScrollView {
@@ -264,7 +263,7 @@ struct TranslationView: View {
                                AnimatedButton(
                                 title: "Stop Translation",
                                 icon: "stop.fill",
-                                gradient: DesignSystem.Colors.secondaryGradient
+                                gradient: themeManager.currentTheme.primaryGradient
                                ) {
                                    handleTranslationStop()
                                }
@@ -273,7 +272,7 @@ struct TranslationView: View {
                                AnimatedButton(
                                 title: "Regenerate Translation",
                                 icon: "arrow.clockwise",
-                                gradient: DesignSystem.Colors.primaryGradient
+                                gradient: themeManager.currentTheme.primaryGradient
                                ) {
                                    handleTranslationStart()
                                }
