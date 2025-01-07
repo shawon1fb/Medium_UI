@@ -1,3 +1,10 @@
+//
+//  MediumPostFromServer.swift
+//  Medium_UI
+//
+//  Created by Shahanul Haque on 1/7/25.
+//
+
 import EasyXConnect
 //
 //  MediumPostRepository.swift
@@ -8,15 +15,17 @@ import EasyXConnect
 import Foundation
 import MediumCore
 
-final class MediumPostRepositoryBindings{
+
+
+final class MediumPostFromServerRepositoryBindings{
     
-    func getDependencies() -> MediumPostRepository {
+    func getDependencies() -> MediumPostFromServerRepository {
         let baseURL = URL(string: "https://medium.com/_/graphql")!
-        return MediumPostRepository(client: ExHttpConnect(baseURL: baseURL), authCookie: cookieKey)
+        return MediumPostFromServerRepository(client: ExHttpConnect(baseURL: baseURL), authCookie: cookieKey)
     }
 }
 
-actor MediumPostRepository: IMediumRepository {
+actor MediumPostFromServerRepository: IMediumRepository {
 
   let client: ExHttpConnect
   let authCookie: String
@@ -58,13 +67,21 @@ actor MediumPostRepository: IMediumRepository {
   func getPostByID(postID: String) async throws -> Post {
       
       print("requesting postID  \(postID)")
-    let data = try await MediumApi(authCookies: "").queryPostById(postId: postID)
+  //  let data = try await MediumApi(authCookies: "").queryPostById(postId: postID)
 //    let data = try await MediumApi(authCookies: "").queryPostById(postId: "f29ea5c47516")
+      
+      
+      let headers: [String: String] = [
+     
+//      "content-type": "application/json",
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    ]
 
     do {
-
-      let response: AppResponse<MediumPostResponse> = try DataToObjectConverter.dataToObject(
-        data: data, statusCode: 200)
+        let baseURL = URL(string: "http://127.0.0.1:3000/\(postID)")!
+        let client = ExHttpConnect(baseURL: baseURL)
+        let response: AppResponse<MediumPostResponse> = try await client.get("", headers: headers)
 
       if let post = response.payload?.data.post {
 
