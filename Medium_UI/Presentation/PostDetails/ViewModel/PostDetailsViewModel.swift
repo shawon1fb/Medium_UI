@@ -26,7 +26,8 @@ final class PostDetailsViewModelBindings {
     if let viewModel = try? DIContainer.shared.resolve(PostDetailsViewModel.self, name: post.id) {
       return viewModel
     } else {
-      let repository = MediumPostRepositoryBindings().getDependencies()
+//      let repository = MediumPostRepositoryBindings().getDependencies()
+      let repository = MediumPostFromServerRepositoryBindings().getDependencies()
         let viewModel = PostDetailsViewModel(repository: repository, postID: post.id)
 
       DIContainer.shared.register(
